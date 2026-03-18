@@ -1,0 +1,61 @@
+substitutions:
+  _SERVICE_NAME: pluto-backend
+  _REGION: asia-south1
+  _IMAGE: asia.gcr.io/$PROJECT_ID/pluto-backend
+
+steps:
+  # ── Step 1: Build Docker image ────────────────────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - build
+      - -t
+      - '${_IMAGE}:${SHORT_SHA}'
+      - -t
+      - '${_IMAGE}:latest'
+      - --cache-from
+      - '${_IMAGE}:latest'
+      - --build-arg
+      - BUILDKIT_INLINE_CACHE=1
+      - .
+    dir: 'pluto-backend'
+
+  # ── Step 2: Push to Artifact Registry ────────────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_IMAGE}:${SHORT_SHA}']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_IMAGE}:latest']
+
+  # ── Step 3: Deploy to Cloud Run ───────────────────────────────────────────────
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - replace
+      - cloudrun-service.yaml
+      - --region=${_REGION}
+    env:
+      - 'IMAGE=${_IMAGE}:${SHORT_SHA}'
+
+  # ── Step 4: Allow unauthenticated access ──────────────────────────────────────
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - add-iam-policy-binding
+      - ${_SERVICE_NAME}
+      - --region=${_REGION}
+      - --member=allUsers
+      - --role=roles/run.invoker
+
+images:
+  - '${_IMAGE}:${SHORT_SHA}'
+  - '${_IMAGE}:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_MEDIUM
+  env:
+    - 'DOCKER_BUILDKIT=1'
