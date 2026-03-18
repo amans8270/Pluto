@@ -1,0 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../core/theme/app_theme.dart';
+
+class NearbyScreen extends ConsumerWidget {
+  const NearbyScreen({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Nearby')),
+      body: const Center(child: Text('Nearby map view coming soon')),
+    );
+  }
+}
+import 'package:flutter_riverpod/flutter_riverpod.dart';
