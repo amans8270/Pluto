@@ -78,14 +78,3 @@ flutter:
     - assets/animations/
     - assets/icons/
 
-  fonts:
-    - family: Outfit
-      fonts:
-        - asset: assets/fonts/Outfit-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Outfit-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Outfit-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Outfit-Bold.ttf
-          weight: 700

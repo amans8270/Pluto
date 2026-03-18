@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // ─── Pluto Brand Colors ────────────────────────────────────────────────────────
 class PlutoColors {
@@ -57,42 +58,42 @@ class PlutoColors {
 class PlutoTextStyles {
   PlutoTextStyles._();
 
-  static const String _fontFamily = 'Outfit';
+  static final String? _fontFamily = GoogleFonts.outfit().fontFamily;
 
-  static const TextStyle displayLarge = TextStyle(
+  static final TextStyle displayLarge = TextStyle(
     fontFamily: _fontFamily, fontSize: 36, fontWeight: FontWeight.w700, letterSpacing: -0.5,
   );
-  static const TextStyle displayMedium = TextStyle(
+  static final TextStyle displayMedium = TextStyle(
     fontFamily: _fontFamily, fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: -0.3,
   );
-  static const TextStyle headlineLarge = TextStyle(
+  static final TextStyle headlineLarge = TextStyle(
     fontFamily: _fontFamily, fontSize: 24, fontWeight: FontWeight.w700,
   );
-  static const TextStyle headlineMedium = TextStyle(
+  static final TextStyle headlineMedium = TextStyle(
     fontFamily: _fontFamily, fontSize: 20, fontWeight: FontWeight.w600,
   );
-  static const TextStyle headlineSmall = TextStyle(
+  static final TextStyle headlineSmall = TextStyle(
     fontFamily: _fontFamily, fontSize: 18, fontWeight: FontWeight.w600,
   );
-  static const TextStyle titleLarge = TextStyle(
+  static final TextStyle titleLarge = TextStyle(
     fontFamily: _fontFamily, fontSize: 16, fontWeight: FontWeight.w600,
   );
-  static const TextStyle titleMedium = TextStyle(
+  static final TextStyle titleMedium = TextStyle(
     fontFamily: _fontFamily, fontSize: 14, fontWeight: FontWeight.w600,
   );
-  static const TextStyle bodyLarge = TextStyle(
+  static final TextStyle bodyLarge = TextStyle(
     fontFamily: _fontFamily, fontSize: 16, fontWeight: FontWeight.w400,
   );
-  static const TextStyle bodyMedium = TextStyle(
+  static final TextStyle bodyMedium = TextStyle(
     fontFamily: _fontFamily, fontSize: 14, fontWeight: FontWeight.w400,
   );
-  static const TextStyle bodySmall = TextStyle(
+  static final TextStyle bodySmall = TextStyle(
     fontFamily: _fontFamily, fontSize: 12, fontWeight: FontWeight.w400,
   );
-  static const TextStyle labelLarge = TextStyle(
+  static final TextStyle labelLarge = TextStyle(
     fontFamily: _fontFamily, fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1,
   );
-  static const TextStyle labelSmall = TextStyle(
+  static final TextStyle labelSmall = TextStyle(
     fontFamily: _fontFamily, fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5,
   );
 }
@@ -115,14 +116,14 @@ class PlutoTheme {
         outline: PlutoColors.divider,
       ),
       scaffoldBackgroundColor: PlutoColors.offWhite,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: PlutoColors.white,
         foregroundColor: PlutoColors.textPrimaryLight,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: PlutoTextStyles.headlineMedium,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: PlutoColors.white,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -161,7 +162,7 @@ class PlutoTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         hintStyle: const TextStyle(color: PlutoColors.textSecondaryLight, fontFamily: 'Outfit'),
       ),
-      dividerTheme: const DividerThemeData(
+      dividerTheme: DividerThemeData(
         color: PlutoColors.divider, thickness: 1, space: 0,
       ),
     );
@@ -183,14 +184,14 @@ class PlutoTheme {
         outline: PlutoColors.dividerDark,
       ),
       scaffoldBackgroundColor: PlutoColors.dark,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: PlutoColors.dark,
         foregroundColor: PlutoColors.textPrimaryDark,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: PlutoTextStyles.headlineMedium,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: PlutoColors.darkCard,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -229,7 +230,7 @@ class PlutoTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         hintStyle: const TextStyle(color: PlutoColors.textSecondaryDark, fontFamily: 'Outfit'),
       ),
-      dividerTheme: const DividerThemeData(
+      dividerTheme: DividerThemeData(
         color: PlutoColors.dividerDark, thickness: 1, space: 0,
       ),
     );

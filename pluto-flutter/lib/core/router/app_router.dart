@@ -12,6 +12,9 @@ import '../../features/chat/screens/chat_screen.dart';
 import '../../features/trips/screens/trip_feed_screen.dart';
 import '../../features/trips/screens/trip_detail_screen.dart';
 import '../../features/trips/screens/create_trip_screen.dart';
+import '../../features/trips/screens/trip_applicants_screen.dart';
+import '../../features/trips/screens/trip_payment_screen.dart';
+import '../../features/trips/screens/trip_members_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/profile/screens/edit_profile_screen.dart';
 import '../../features/profile/screens/interests_screen.dart';
@@ -66,6 +69,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/trips/:tripId',
         builder: (ctx, state) => TripDetailScreen(tripId: state.pathParameters['tripId']!),
+      ),
+      GoRoute(
+        path: '/trips/:tripId/applicants',
+        builder: (ctx, state) => TripApplicantsScreen(tripId: state.pathParameters['tripId']!),
+      ),
+      GoRoute(
+        path: '/applications/:appId/pay',
+        builder: (ctx, state) => TripPaymentScreen(
+          applicationId: state.pathParameters['appId']!,
+          tripId: state.uri.queryParameters['tripId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/trips/:tripId/members',
+        builder: (ctx, state) => TripMembersScreen(tripId: state.pathParameters['tripId']!),
       ),
       GoRoute(path: '/trips/create', builder: (_, __) => const CreateTripScreen()),
       GoRoute(path: '/profile/edit',  builder: (_, __) => const EditProfileScreen()),

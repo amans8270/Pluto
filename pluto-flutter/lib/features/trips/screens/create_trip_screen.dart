@@ -53,7 +53,7 @@ class _CreateTripScreenState extends ConsumerState<CreateTripScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(icon: const Icon(Icons.close), onPressed: () => context.pop()),
-        title: const Text('Create Trip', style: PlutoTextStyles.headlineSmall),
+        title: Text('Create Trip', style: PlutoTextStyles.headlineSmall),
         actions: [
           if (_step < 2) TextButton(
             onPressed: () => setState(() => _step++),
@@ -185,7 +185,7 @@ class _CreateTripScreenState extends ConsumerState<CreateTripScreen> {
                   children: [
                     const Icon(Icons.currency_rupee, color: PlutoColors.travel, size: 20),
                     const SizedBox(width: 8),
-                    const Text('Entry fee', style: PlutoTextStyles.titleMedium),
+                    Text('Entry fee', style: PlutoTextStyles.titleMedium),
                     const Spacer(),
                     SizedBox(
                       width: 80,

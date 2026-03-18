@@ -26,7 +26,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-        title: const Text('Chat', style: PlutoTextStyles.headlineSmall),
+        title: Text('Chat', style: PlutoTextStyles.headlineSmall),
         actions: [
           IconButton(icon: const Icon(Icons.video_call_outlined), onPressed: () {}),
           IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),

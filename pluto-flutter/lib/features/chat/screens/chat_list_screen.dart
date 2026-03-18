@@ -104,9 +104,9 @@ class _EmptyChats extends StatelessWidget {
         children: [
           Icon(Icons.chat_bubble_outline, size: 70, color: Colors.grey.withOpacity(0.3)),
           const SizedBox(height: 16),
-          const Text('No chats yet', style: PlutoTextStyles.headlineSmall),
+          Text('No chats yet', style: PlutoTextStyles.headlineSmall),
           const SizedBox(height: 8),
-          const Text('Match with someone and say hello! 👋', style: PlutoTextStyles.bodyMedium),
+          Text('Match with someone and say hello! 👋', style: PlutoTextStyles.bodyMedium),
         ],
       ),
     );

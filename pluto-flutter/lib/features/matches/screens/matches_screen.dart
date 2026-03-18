@@ -14,7 +14,7 @@ class MatchesScreen extends ConsumerWidget {
           children: [
             Icon(Icons.favorite_outline, size: 64, color: PlutoColors.dating.withOpacity(0.4)),
             const SizedBox(height: 16),
-            const Text('Your matches will appear here', style: PlutoTextStyles.bodyLarge),
+            Text('Your matches will appear here', style: PlutoTextStyles.bodyLarge),
           ],
         ),
       ),
