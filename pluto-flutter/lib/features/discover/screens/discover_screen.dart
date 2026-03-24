@@ -99,17 +99,42 @@ class _SwipeDeck extends ConsumerWidget {
           child: CardSwiper(
             controller: controller,
             cardsCount: candidates.length,
-            numberOfCardsDisplayed: 3,
+            numberOfCardsDisplayed: candidates.length < 3 ? candidates.length : 3,
             backCardOffset: const Offset(20, 30),
             padding: const EdgeInsets.symmetric(horizontal: 20),
+            isLoop: candidates.any((p) => p['id'].toString().startsWith('demo_')),
             onSwipe: (prev, curr, dir) {
               final action = dir == CardSwiperDirection.right ? 'LIKE'
                   : dir == CardSwiperDirection.left ? 'DISLIKE' : 'SUPERLIKE';
+              
               ref.read(swipeActionProvider.notifier).swipe(
                 targetId: candidates[prev]['id'],
                 mode: mode,
                 action: action,
-              );
+              ).then((result) {
+                if (result['is_demo_interaction'] == true && context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      title: Row(
+                        children: [
+                          const Icon(Icons.lightbulb_outline, color: Colors.amber),
+                          const SizedBox(width: 10),
+                          Text(result['title'] ?? 'Guide Tip'),
+                        ],
+                      ),
+                      content: Text(result['message'] ?? '', style: const TextStyle(fontSize: 16)),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: const Text('Got it!', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              });
               return true;
             },
             cardBuilder: (ctx, index, hOffset, vOffset) {
@@ -129,7 +154,7 @@ class _SwipeDeck extends ConsumerWidget {
               // Dislike
               _ActionBtn(
                 icon: Icons.close_rounded,
-                color: Colors.white,
+                color: activeColor,
                 bg: Colors.white,
                 shadow: Colors.black12,
                 size: 56,

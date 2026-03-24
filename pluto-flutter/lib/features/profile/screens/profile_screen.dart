@@ -82,12 +82,12 @@ class ProfileScreen extends ConsumerWidget {
                     const SizedBox(height: 12),
 
                     Text(
-                      profile?['profile']?['display_name'] ?? 'Your Name',
+                      profile?['display_name'] ?? 'Your Name',
                       style: PlutoTextStyles.headlineMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      profile?['profile']?['occupation'] ?? 'Add your occupation',
+                      profile?['occupation'] ?? 'Add your occupation',
                       style: PlutoTextStyles.bodyMedium.copyWith(color: Colors.grey),
                     ),
                     const SizedBox(height: 16),

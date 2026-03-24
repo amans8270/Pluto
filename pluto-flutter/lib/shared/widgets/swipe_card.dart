@@ -11,8 +11,15 @@ class SwipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photos = (candidate['photos'] as List?)?.cast<String>() ?? [];
-    final interests = (candidate['interests'] as List?)?.cast<String>() ?? [];
+    final dynamic rawPhotos = candidate['photos'];
+    final List<String> photos = [];
+    if (rawPhotos is List) {
+      for (var p in rawPhotos) {
+        if (p is String) photos.add(p);
+        else if (p is Map && p.containsKey('gcs_url')) photos.add(p['gcs_url']);
+      }
+    }
+    final List<String> interests = (candidate['interests'] as List?)?.cast<String>() ?? [];
     final activeColor = PlutoColors.modeColor(mode);
     final modeLabel = {'DATE': 'DATE MODE', 'TRAVELBUDDY': 'TRAVELBUDDY MODE', 'BFF': 'BFF MODE'}[mode]!;
 
@@ -30,15 +37,17 @@ class SwipeCard extends StatelessWidget {
           children: [
             // Photo
             photos.isNotEmpty
-                ? CachedNetworkImage(
-                    imageUrl: photos[0],
-                    fit: BoxFit.cover,
-                    placeholder: (_, __) => Container(color: Colors.grey[200]),
-                    errorWidget: (_, __, ___) => Container(
-                      color: activeColor.withOpacity(0.15),
-                      child: Icon(Icons.person, size: 100, color: activeColor.withOpacity(0.3)),
-                    ),
-                  )
+                ? (photos[0].startsWith('assets/')
+                    ? Image.asset(photos[0], fit: BoxFit.cover)
+                    : CachedNetworkImage(
+                        imageUrl: photos[0],
+                        fit: BoxFit.cover,
+                        placeholder: (_, __) => Container(color: Colors.grey[200]),
+                        errorWidget: (_, __, ___) => Container(
+                          color: activeColor.withOpacity(0.15),
+                          child: Icon(Icons.person, size: 100, color: activeColor.withOpacity(0.3)),
+                        ),
+                      ))
                 : Container(
                     color: activeColor.withOpacity(0.15),
                     child: Icon(Icons.person, size: 100, color: activeColor.withOpacity(0.3)),

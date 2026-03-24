@@ -74,7 +74,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   )
                 : ElevatedButton(
                     style: ElevatedButton.styleFrom(backgroundColor: _pages[_page].color),
-                    onPressed: () => context.go('/discover'),
+                    onPressed: () => context.push('/profile/edit'),
                     child: const Text("Let's Go! 🚀", style: TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.w600, fontSize: 16)),
                   ),
           ),

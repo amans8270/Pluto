@@ -12,7 +12,7 @@ class TripMembersScreen extends ConsumerWidget {
     final membersAsync = ref.watch(tripMembersProvider(tripId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Trip Buddies', style: PlutoTextStyles.headlineSmall)),
+      appBar: AppBar(title: Text('Trip Buddies', style: PlutoTextStyles.headlineSmall)),
       body: membersAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),

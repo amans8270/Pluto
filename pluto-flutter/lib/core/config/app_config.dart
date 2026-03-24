@@ -6,17 +6,17 @@ class AppConfig {
 
   static String get apiBaseUrl {
     switch (env) {
-      case 'prod': return 'https://api.pluto.app/api/v1';
-      case 'staging': return 'https://api-staging.pluto.app/api/v1';
-      default: return 'http://10.0.2.2:8080/api/v1'; // Android emulator
+      case 'prod': return 'https://pluto-backend-568055543790.us-east4.run.app/api/v1/';
+      case 'staging': return 'https://api-staging.pluto.app/api/v1/';
+      default: return 'http://192.168.29.126:8080/api/v1/';
     }
   }
 
   static String get wsBaseUrl {
     switch (env) {
-      case 'prod': return 'wss://api.pluto.app/ws';
-      case 'staging': return 'wss://api-staging.pluto.app/ws';
-      default: return 'ws://10.0.2.2:8080/ws';
+      case 'prod': return 'wss://pluto-backend-568055543790.us-east4.run.app/ws/';
+      case 'staging': return 'wss://api-staging.pluto.app/ws/';
+      default: return 'ws://192.168.29.126:8080/ws/';
     }
   }
 

@@ -14,7 +14,7 @@ class TripApplicantsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Applicants', style: PlutoTextStyles.headlineSmall),
+        title: Text('Applicants', style: PlutoTextStyles.headlineSmall),
       ),
       body: appsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -92,7 +92,7 @@ class _ApplicantTile extends ConsumerWidget {
     
     if (status == 'GROUP_PENDING') {
       final authState = ref.watch(authStateProvider);
-      final currentUserId = authState.value?.id;
+      final currentUserId = authState.value?.uid;
       final voteStatus = ref.watch(applicationStatusProvider(appId)).valueOrNull;
       final voters = voteStatus?['voters'] as List?;
       final alreadyVoted = voters != null && voters.contains(currentUserId);

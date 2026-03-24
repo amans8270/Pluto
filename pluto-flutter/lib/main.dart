@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'core/services/cache_service.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Initialize SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
 
   // Lock to portrait
   await SystemChrome.setPreferredOrientations([
@@ -22,7 +27,14 @@ Future<void> main() async {
     statusBarIconBrightness: Brightness.dark,
   ));
 
-  runApp(const ProviderScope(child: PlutoApp()));
+  runApp(
+    ProviderScope(
+      overrides: [
+        cacheServiceProvider.overrideWithValue(CacheService(prefs)),
+      ],
+      child: const PlutoApp(),
+    ),
+  );
 }
 
 class PlutoApp extends ConsumerWidget {

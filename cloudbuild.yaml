@@ -1,7 +1,7 @@
 substitutions:
   _SERVICE_NAME: pluto-backend
-  _REGION: asia-south1
-  _IMAGE: asia.gcr.io/$PROJECT_ID/pluto-backend
+  _REGION: us-east4
+  _IMAGE: asia.gcr.io/pluto-backend-490622/pluto-backend
 
 steps:
   # ── Step 1: Build Docker image ────────────────────────────────────────────────
@@ -9,7 +9,7 @@ steps:
     args:
       - build
       - -t
-      - '${_IMAGE}:${SHORT_SHA}'
+      - '${_IMAGE}:${BUILD_ID}'
       - -t
       - '${_IMAGE}:latest'
       - --cache-from
@@ -21,7 +21,7 @@ steps:
 
   # ── Step 2: Push to Artifact Registry ────────────────────────────────────────
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '${_IMAGE}:${SHORT_SHA}']
+    args: ['push', '${_IMAGE}:${BUILD_ID}']
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '${_IMAGE}:latest']
@@ -35,8 +35,9 @@ steps:
       - replace
       - cloudrun-service.yaml
       - --region=${_REGION}
+    dir: 'pluto-backend'
     env:
-      - 'IMAGE=${_IMAGE}:${SHORT_SHA}'
+      - 'IMAGE=${_IMAGE}:${BUILD_ID}'
 
   # ── Step 4: Allow unauthenticated access ──────────────────────────────────────
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -51,7 +52,7 @@ steps:
       - --role=roles/run.invoker
 
 images:
-  - '${_IMAGE}:${SHORT_SHA}'
+  - '${_IMAGE}:${BUILD_ID}'
   - '${_IMAGE}:latest'
 
 options:

@@ -22,6 +22,7 @@ import '../../features/nearby/screens/nearby_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import '../../shared/screens/shell_screen.dart';
 import '../providers/auth_provider.dart';
+import '../../features/profile/providers/profile_provider.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -33,12 +34,42 @@ final routerProvider = Provider<GoRouter>((ref) {
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/splash',
     redirect: (context, state) {
-      final isLoggedIn = authState.valueOrNull != null;
-      final onAuthPage = state.matchedLocation.startsWith('/login') ||
-          state.matchedLocation == '/splash';
+      // While Firebase auth is still initialising, stay on splash
+      if (authState.isLoading) return null;
 
-      if (!isLoggedIn && !onAuthPage) return '/login';
-      if (isLoggedIn && onAuthPage) return '/discover';
+      final isLoggedIn = authState.valueOrNull != null;
+      
+      // 1. Not logged in -> must go to /login (or stay there)
+      if (!isLoggedIn) {
+        if (state.matchedLocation.startsWith('/login')) return null;
+        return '/login';
+      }
+
+      // 2. Logged in, check backend profile status
+      final profileState = ref.watch(myProfileProvider);
+      
+      if (profileState.isLoading) return null; // stay on splash/login while fetching profile
+      
+      final hasProfile = profileState.hasValue && profileState.value != null;
+
+      // 3. Logged in & Profile exists
+      if (hasProfile) {
+        if (state.matchedLocation == '/splash' || 
+            state.matchedLocation.startsWith('/login') || 
+            state.matchedLocation.startsWith('/onboarding')) {
+          return '/discover';
+        }
+        return null;
+      }
+
+      // 4. Logged in but NO Profile -> forced to onboarding/setup
+      if (!hasProfile) {
+        if (state.matchedLocation == '/onboarding' || state.matchedLocation == '/profile/edit') {
+           return null; // allowed to be here to complete setup
+        }
+        return '/onboarding';
+      }
+
       return null;
     },
     routes: [

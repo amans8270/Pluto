@@ -70,7 +70,7 @@ class _TripPaymentScreenState extends ConsumerState<TripPaymentScreen> {
           children: [
             const Icon(Icons.stars, color: Colors.orange, size: 40),
             const SizedBox(height: 16),
-            Text('Travel Buddy Entry', style: PlutoTextStyles.displaySmall),
+            Text('Travel Buddy Entry', style: PlutoTextStyles.headlineMedium),
             const SizedBox(height: 8),
             const Text('To finalize your membership, please pay the entry fee of ₹11 or use a promo code.'),
             const Divider(height: 48),

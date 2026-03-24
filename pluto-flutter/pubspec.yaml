@@ -60,6 +60,7 @@ dependencies:
 
   # Fonts
   google_fonts: ^6.2.1
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +75,5 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/
-    - assets/animations/
-    - assets/icons/
+    - assets/images/demo/
 

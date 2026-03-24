@@ -1,0 +1,36 @@
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+ios/Flutter/.last_build_id
+ios/.generated/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project-specific
+pluto-node-backend/
+out.txt

@@ -1,0 +1,22 @@
+Running Gradle task 'assembleRelease'...                        
+lib/features/auth/screens/login_screen.dart:28:32: Error: Couldn't find constructor 'GoogleSignIn'.
+      final googleUser = await GoogleSignIn().signIn();
+                               ^^^^^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildRelease'.
+> Process 'command 'F:\Flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 23s
+Running Gradle task 'assembleRelease'...                           23.6s
+Gradle task assembleRelease failed with exit code 1
