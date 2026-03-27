@@ -28,7 +28,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _jobCtrl = TextEditingController();
 
   String _gender = 'M';
-  
+
   // Store either the local File (if just picked) or String URL (if uploaded by backend)
   final List<dynamic> _photos = List.filled(6, null);
   final Set<int> _uploadingIndices = {};
@@ -51,11 +51,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       _bioCtrl.text = profile['bio'] ?? '';
       _eduCtrl.text = profile['education'] ?? '';
       _jobCtrl.text = profile['occupation'] ?? '';
-      
+
       final gender = profile['gender']?.toString().toUpperCase();
-      if (gender == 'MALE') _gender = 'M';
-      else if (gender == 'FEMALE') _gender = 'F';
-      else _gender = 'O';
+      if (gender == 'MALE') {
+        _gender = 'M';
+      } else if (gender == 'FEMALE')
+        _gender = 'F';
+      else
+        _gender = 'O';
 
       // Photos
       final photos = profile['photos'] as List?;
@@ -79,10 +82,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   }
 
   Future<void> _pickImage(int index) async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+    final XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
     if (image != null) {
       setState(() {
-        _photos[index] = File(image.path); // Optimistic: Show local file immediately
+        _photos[index] =
+            File(image.path); // Optimistic: Show local file immediately
         _uploadingIndices.add(index);
       });
       await _uploadPhoto(File(image.path), index);
@@ -95,8 +100,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(file.path),
       });
-      final resp = await dio.post('users/me/photos?display_order=$index', data: formData);
-      
+      final resp = await dio.post('users/me/photos?display_order=$index',
+          data: formData);
+
       if (mounted) {
         setState(() {
           _photos[index] = resp.data['url'];
@@ -106,17 +112,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _uploadingIndices.remove(index));
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to upload photo: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to upload photo: $e')));
       }
     }
   }
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     // Check if at least one photo is uploaded
     if (_photos.where((p) => p != null).isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please add at least one photo')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please add at least one photo')));
       return;
     }
 
@@ -126,7 +134,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       final payload = {
         "display_name": _nameCtrl.text.trim(),
         "age": int.parse(_ageCtrl.text.trim()),
-        "gender": _gender == 'M' ? 'MALE' : (_gender == 'F' ? 'FEMALE' : 'OTHER'),
+        "gender":
+            _gender == 'M' ? 'MALE' : (_gender == 'F' ? 'FEMALE' : 'OTHER'),
         "bio": _bioCtrl.text.trim(),
         "education": _eduCtrl.text.trim(),
         "occupation": _jobCtrl.text.trim(),
@@ -136,23 +145,27 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       };
 
       final profileExists = ref.read(myProfileProvider).valueOrNull != null;
-      
+
       if (profileExists) {
         await dio.put('users/me/profile', data: payload);
       } else {
         await dio.post('users/me/profile', data: payload);
       }
-      
+
       // Refresh profile state so router lets us into /discover
       ref.invalidate(myProfileProvider);
       await ref.read(myProfileProvider.future);
-      
+
       if (mounted) context.go('/discover');
     } on DioException catch (e) {
       final msg = e.response?.data['detail'] ?? e.message;
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $msg')));
+      if (mounted)
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $msg')));
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      if (mounted)
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -163,16 +176,29 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Edit Profile', style: TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.w600, color: Colors.black)),
+        title: const Text('Edit Profile',
+            style: TextStyle(
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w600,
+                color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.close, color: Colors.black), onPressed: () => context.pop()),
+        leading: IconButton(
+            icon: const Icon(Icons.close, color: Colors.black),
+            onPressed: () => context.pop()),
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _saveProfile,
-            child: _isLoading 
-              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-              : const Text('Done', style: TextStyle(color: PlutoColors.dating, fontWeight: FontWeight.w600, fontSize: 16)),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2))
+                : const Text('Done',
+                    style: TextStyle(
+                        color: PlutoColors.dating,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16)),
           ),
         ],
       ),
@@ -187,8 +213,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Media', style: TextStyle(fontFamily: 'Outfit', fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('${_photos.where((p) => p != null).length}/6', style: TextStyle(color: PlutoColors.dating, fontWeight: FontWeight.w600)),
+                  const Text('Media',
+                      style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold)),
+                  Text('${_photos.where((p) => p != null).length}/6',
+                      style: const TextStyle(
+                          color: PlutoColors.dating,
+                          fontWeight: FontWeight.w600)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -210,48 +243,65 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       decoration: BoxDecoration(
                         color: Colors.red.shade50,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.red.shade100, width: 2),
+                        border:
+                            Border.all(color: Colors.red.shade100, width: 2),
                       ),
                       child: photo != null
-                        ? Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: photo is File 
-                                  ? Image.file(photo, fit: BoxFit.cover)
-                                  : CachedNetworkImage(
-                                      imageUrl: photo as String,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) => Shimmer.fromColors(
-                                        baseColor: Colors.grey.shade200,
-                                        highlightColor: Colors.grey.shade100,
-                                        child: Container(color: Colors.white),
-                                      ),
-                                      errorWidget: (context, url, error) => const Icon(Icons.error),
-                                    ),
-                              ),
-                              if (_uploadingIndices.contains(i))
-                                Container(
-                                  decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(10)),
-                                  child: const Center(child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
+                          ? Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: photo is File
+                                      ? Image.file(photo, fit: BoxFit.cover)
+                                      : CachedNetworkImage(
+                                          imageUrl: photo as String,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade200,
+                                            highlightColor:
+                                                Colors.grey.shade100,
+                                            child:
+                                                Container(color: Colors.white),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
                                 ),
-                            ],
-                          )
-                        : const Center(
-                            child: Icon(Icons.add_circle, color: PlutoColors.dating, size: 32),
-                          ),
+                                if (_uploadingIndices.contains(i))
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.black26,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: const Center(
+                                        child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2)),
+                                  ),
+                              ],
+                            )
+                          : const Center(
+                              child: Icon(Icons.add_circle,
+                                  color: PlutoColors.dating, size: 32),
+                            ),
                     ),
                   );
                 },
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 8, bottom: 24),
-                child: Text('Add up to 6 photos to show your personality.', style: TextStyle(color: Colors.grey, fontSize: 13)),
+                child: Text('Add up to 6 photos to show your personality.',
+                    style: TextStyle(color: Colors.grey, fontSize: 13)),
               ),
 
               // Basic Info
-              const Text('Basic Info', style: TextStyle(fontFamily: 'Outfit', fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text('Basic Info',
+                  style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nameCtrl,
@@ -261,9 +311,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   labelStyle: TextStyle(color: Colors.grey.shade700),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
               Row(
@@ -278,7 +331,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         labelStyle: TextStyle(color: Colors.grey.shade700),
                         filled: true,
                         fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (val) {
                         if (val == null || val.isEmpty) return 'Required';
@@ -291,15 +346,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _gender,
-                      style: const TextStyle(color: Colors.black, fontSize: 16, fontFamily: 'Outfit'),
+                      initialValue: _gender,
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: 'Outfit'),
                       dropdownColor: Colors.white,
                       decoration: InputDecoration(
                         labelText: 'Gender',
                         labelStyle: TextStyle(color: Colors.grey.shade700),
                         filled: true,
                         fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none),
                       ),
                       items: const [
                         DropdownMenuItem(value: 'M', child: Text('Male')),
@@ -314,7 +374,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               const SizedBox(height: 24),
 
               // Bio
-              const Text('Bio', style: TextStyle(fontFamily: 'Outfit', fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text('Bio',
+                  style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _bioCtrl,
@@ -326,13 +390,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   hintStyle: TextStyle(color: Colors.grey.shade500),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                 ),
               ),
               const SizedBox(height: 24),
 
               // Additional Details
-              const Text('More Details', style: TextStyle(fontFamily: 'Outfit', fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text('More Details',
+                  style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _eduCtrl,
@@ -343,7 +413,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   prefixIcon: const Icon(Icons.school, color: Colors.grey),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                 ),
               ),
               const SizedBox(height: 12),
@@ -356,50 +428,64 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   prefixIcon: const Icon(Icons.work, color: Colors.grey),
                   filled: true,
                   fillColor: Colors.grey.shade100,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none),
                 ),
               ),
               const SizedBox(height: 24),
 
               // Interests
-              const Text('Interests', style: TextStyle(fontFamily: 'Outfit', fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text('Interests',
+                  style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              const Text('Select 3-10 things you love.', style: TextStyle(color: Colors.grey, fontSize: 13)),
+              const Text('Select 3-10 things you love.',
+                  style: TextStyle(color: Colors.grey, fontSize: 13)),
               const SizedBox(height: 16),
-              
+
               ref.watch(availableInterestsProvider).when(
-                data: (interests) => Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: interests.map((item) {
-                    final id = item['id'] as int;
-                    final isSelected = _selectedInterests.contains(id);
-                    return FilterChip(
-                      label: Text(item['name']),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        setState(() {
-                          if (selected) {
-                            if (_selectedInterests.length < 10) _selectedInterests.add(id);
-                          } else {
-                            _selectedInterests.remove(id);
-                          }
-                        });
-                      },
-                      selectedColor: PlutoColors.dating.withOpacity(0.2),
-                      checkmarkColor: PlutoColors.dating,
-                      labelStyle: TextStyle(
-                        color: isSelected ? PlutoColors.dating : Colors.black87,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                      ),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                      backgroundColor: Colors.grey.shade100,
-                    );
-                  }).toList(),
-                ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Text('Error loading interests: $e'),
-              ),
+                    data: (interests) => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: interests.map((item) {
+                        final id = item['id'] as int;
+                        final isSelected = _selectedInterests.contains(id);
+                        return FilterChip(
+                          label: Text(item['name']),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                if (_selectedInterests.length < 10)
+                                  _selectedInterests.add(id);
+                              } else {
+                                _selectedInterests.remove(id);
+                              }
+                            });
+                          },
+                          selectedColor: PlutoColors.dating.withOpacity(0.2),
+                          checkmarkColor: PlutoColors.dating,
+                          labelStyle: TextStyle(
+                            color: isSelected
+                                ? PlutoColors.dating
+                                : Colors.black87,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          backgroundColor: Colors.grey.shade100,
+                        );
+                      }).toList(),
+                    ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, _) => Text('Error loading interests: $e'),
+                  ),
 
               const SizedBox(height: 48), // Bottom padding
             ],
@@ -415,7 +501,11 @@ class InterestsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Interests'), leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop())),
+      appBar: AppBar(
+          title: const Text('My Interests'),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.pop())),
       body: const Center(child: Text('Interest tags — coming soon')),
     );
   }

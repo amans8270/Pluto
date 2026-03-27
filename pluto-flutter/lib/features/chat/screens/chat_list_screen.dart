@@ -35,7 +35,8 @@ class ChatListScreen extends ConsumerWidget {
             Expanded(
               child: chatsAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Failed to load chats')),
+                error: (e, _) =>
+                    const Center(child: Text('Failed to load chats')),
                 data: (chats) => chats.isEmpty
                     ? const _EmptyChats()
                     : ListView.builder(
@@ -90,7 +91,9 @@ class _ChatTile extends StatelessWidget {
     if (ts == null) return '';
     try {
       return timeago.format(DateTime.parse(ts));
-    } catch (_) { return ''; }
+    } catch (_) {
+      return '';
+    }
   }
 }
 
@@ -102,11 +105,13 @@ class _EmptyChats extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.chat_bubble_outline, size: 70, color: Colors.grey.withOpacity(0.3)),
+          Icon(Icons.chat_bubble_outline,
+              size: 70, color: Colors.grey.withOpacity(0.3)),
           const SizedBox(height: 16),
           Text('No chats yet', style: PlutoTextStyles.headlineSmall),
           const SizedBox(height: 8),
-          Text('Match with someone and say hello! 👋', style: PlutoTextStyles.bodyMedium),
+          Text('Match with someone and say hello! 👋',
+              style: PlutoTextStyles.bodyMedium),
         ],
       ),
     );

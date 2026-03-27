@@ -46,10 +46,14 @@ class PlutoColors {
   // Mode gradient maps
   static Color modeColor(String mode) {
     switch (mode.toUpperCase()) {
-      case 'DATE': return dating;
-      case 'TRAVELBUDDY': return travel;
-      case 'BFF': return bff;
-      default: return dating;
+      case 'DATE':
+        return dating;
+      case 'TRAVELBUDDY':
+        return travel;
+      case 'BFF':
+        return bff;
+      default:
+        return dating;
     }
   }
 }
@@ -61,40 +65,68 @@ class PlutoTextStyles {
   static final String? _fontFamily = GoogleFonts.outfit().fontFamily;
 
   static final TextStyle displayLarge = TextStyle(
-    fontFamily: _fontFamily, fontSize: 36, fontWeight: FontWeight.w700, letterSpacing: -0.5,
+    fontFamily: _fontFamily,
+    fontSize: 36,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.5,
   );
   static final TextStyle displayMedium = TextStyle(
-    fontFamily: _fontFamily, fontSize: 28, fontWeight: FontWeight.w700, letterSpacing: -0.3,
+    fontFamily: _fontFamily,
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.3,
   );
   static final TextStyle headlineLarge = TextStyle(
-    fontFamily: _fontFamily, fontSize: 24, fontWeight: FontWeight.w700,
+    fontFamily: _fontFamily,
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
   );
   static final TextStyle headlineMedium = TextStyle(
-    fontFamily: _fontFamily, fontSize: 20, fontWeight: FontWeight.w600,
+    fontFamily: _fontFamily,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
   );
   static final TextStyle headlineSmall = TextStyle(
-    fontFamily: _fontFamily, fontSize: 18, fontWeight: FontWeight.w600,
+    fontFamily: _fontFamily,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
   );
   static final TextStyle titleLarge = TextStyle(
-    fontFamily: _fontFamily, fontSize: 16, fontWeight: FontWeight.w600,
+    fontFamily: _fontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
   );
   static final TextStyle titleMedium = TextStyle(
-    fontFamily: _fontFamily, fontSize: 14, fontWeight: FontWeight.w600,
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
   );
   static final TextStyle bodyLarge = TextStyle(
-    fontFamily: _fontFamily, fontSize: 16, fontWeight: FontWeight.w400,
+    fontFamily: _fontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
   );
   static final TextStyle bodyMedium = TextStyle(
-    fontFamily: _fontFamily, fontSize: 14, fontWeight: FontWeight.w400,
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
   );
   static final TextStyle bodySmall = TextStyle(
-    fontFamily: _fontFamily, fontSize: 12, fontWeight: FontWeight.w400,
+    fontFamily: _fontFamily,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
   );
   static final TextStyle labelLarge = TextStyle(
-    fontFamily: _fontFamily, fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1,
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.1,
   );
   static final TextStyle labelSmall = TextStyle(
-    fontFamily: _fontFamily, fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5,
+    fontFamily: _fontFamily,
+    fontSize: 11,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.5,
   );
 }
 
@@ -105,12 +137,11 @@ class PlutoTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       fontFamily: 'Outfit',
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: PlutoColors.dating,
         secondary: PlutoColors.travel,
         tertiary: PlutoColors.bff,
         surface: PlutoColors.white,
-        background: PlutoColors.offWhite,
         onPrimary: PlutoColors.white,
         onSurface: PlutoColors.textPrimaryLight,
         outline: PlutoColors.divider,
@@ -134,7 +165,8 @@ class PlutoTheme {
           backgroundColor: PlutoColors.dating,
           foregroundColor: PlutoColors.white,
           minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: PlutoTextStyles.labelLarge,
           elevation: 0,
         ),
@@ -144,7 +176,8 @@ class PlutoTheme {
           foregroundColor: PlutoColors.dating,
           side: const BorderSide(color: PlutoColors.dating, width: 1.5),
           minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: PlutoTextStyles.labelLarge,
         ),
       ),
@@ -159,11 +192,15 @@ class PlutoTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: PlutoColors.dating, width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        hintStyle: const TextStyle(color: PlutoColors.textSecondaryLight, fontFamily: 'Outfit'),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        hintStyle: const TextStyle(
+            color: PlutoColors.textSecondaryLight, fontFamily: 'Outfit'),
       ),
-      dividerTheme: DividerThemeData(
-        color: PlutoColors.divider, thickness: 1, space: 0,
+      dividerTheme: const DividerThemeData(
+        color: PlutoColors.divider,
+        thickness: 1,
+        space: 0,
       ),
     );
   }
@@ -173,12 +210,11 @@ class PlutoTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       fontFamily: 'Outfit',
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: PlutoColors.dating,
         secondary: PlutoColors.travel,
         tertiary: PlutoColors.bff,
         surface: PlutoColors.darkCard,
-        background: PlutoColors.dark,
         onPrimary: PlutoColors.white,
         onSurface: PlutoColors.textPrimaryDark,
         outline: PlutoColors.dividerDark,
@@ -202,7 +238,8 @@ class PlutoTheme {
           backgroundColor: PlutoColors.dating,
           foregroundColor: PlutoColors.white,
           minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: PlutoTextStyles.labelLarge,
           elevation: 0,
         ),
@@ -212,7 +249,8 @@ class PlutoTheme {
           foregroundColor: PlutoColors.dating,
           side: const BorderSide(color: PlutoColors.dating, width: 1.5),
           minimumSize: const Size(double.infinity, 52),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           textStyle: PlutoTextStyles.labelLarge,
         ),
       ),
@@ -227,11 +265,15 @@ class PlutoTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: PlutoColors.dating, width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        hintStyle: const TextStyle(color: PlutoColors.textSecondaryDark, fontFamily: 'Outfit'),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        hintStyle: const TextStyle(
+            color: PlutoColors.textSecondaryDark, fontFamily: 'Outfit'),
       ),
-      dividerTheme: DividerThemeData(
-        color: PlutoColors.dividerDark, thickness: 1, space: 0,
+      dividerTheme: const DividerThemeData(
+        color: PlutoColors.dividerDark,
+        thickness: 1,
+        space: 0,
       ),
     );
   }

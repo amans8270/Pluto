@@ -34,13 +34,15 @@ class DiscoverScreen extends ConsumerWidget {
                       color: activeColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.public, color: Colors.white, size: 20),
+                    child:
+                        const Icon(Icons.public, color: Colors.white, size: 20),
                   ),
                   const SizedBox(width: 10),
                   Text(
                     'Pluto',
                     style: PlutoTextStyles.headlineMedium.copyWith(
-                      color: activeColor, fontWeight: FontWeight.w700,
+                      color: activeColor,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   const Spacer(),
@@ -56,7 +58,8 @@ class DiscoverScreen extends ConsumerWidget {
             // ── Mode Tabs ────────────────────────────────────────
             PlutoModeTabs(
               selectedMode: mode,
-              onModeChanged: (m) => ref.read(appModeProvider.notifier).setMode(m),
+              onModeChanged: (m) =>
+                  ref.read(appModeProvider.notifier).setMode(m),
             ),
             const SizedBox(height: 16),
 
@@ -64,7 +67,8 @@ class DiscoverScreen extends ConsumerWidget {
             Expanded(
               child: discoverAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Error loading profiles')),
+                error: (e, _) =>
+                    const Center(child: Text('Error loading profiles')),
                 data: (candidates) {
                   if (candidates.isEmpty) {
                     return _EmptyState(mode: mode, color: activeColor);
@@ -99,36 +103,48 @@ class _SwipeDeck extends ConsumerWidget {
           child: CardSwiper(
             controller: controller,
             cardsCount: candidates.length,
-            numberOfCardsDisplayed: candidates.length < 3 ? candidates.length : 3,
+            numberOfCardsDisplayed:
+                candidates.length < 3 ? candidates.length : 3,
             backCardOffset: const Offset(20, 30),
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            isLoop: candidates.any((p) => p['id'].toString().startsWith('demo_')),
+            isLoop:
+                candidates.any((p) => p['id'].toString().startsWith('demo_')),
             onSwipe: (prev, curr, dir) {
-              final action = dir == CardSwiperDirection.right ? 'LIKE'
-                  : dir == CardSwiperDirection.left ? 'DISLIKE' : 'SUPERLIKE';
-              
-              ref.read(swipeActionProvider.notifier).swipe(
-                targetId: candidates[prev]['id'],
-                mode: mode,
-                action: action,
-              ).then((result) {
+              final action = dir == CardSwiperDirection.right
+                  ? 'LIKE'
+                  : dir == CardSwiperDirection.left
+                      ? 'DISLIKE'
+                      : 'SUPERLIKE';
+
+              ref
+                  .read(swipeActionProvider.notifier)
+                  .swipe(
+                    targetId: candidates[prev]['id'],
+                    mode: mode,
+                    action: action,
+                  )
+                  .then((result) {
                 if (result['is_demo_interaction'] == true && context.mounted) {
                   showDialog(
                     context: context,
                     builder: (ctx) => AlertDialog(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                       title: Row(
                         children: [
-                          const Icon(Icons.lightbulb_outline, color: Colors.amber),
+                          const Icon(Icons.lightbulb_outline,
+                              color: Colors.amber),
                           const SizedBox(width: 10),
                           Text(result['title'] ?? 'Guide Tip'),
                         ],
                       ),
-                      content: Text(result['message'] ?? '', style: const TextStyle(fontSize: 16)),
+                      content: Text(result['message'] ?? '',
+                          style: const TextStyle(fontSize: 16)),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(ctx),
-                          child: const Text('Got it!', style: TextStyle(fontWeight: FontWeight.bold)),
+                          child: const Text('Got it!',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
@@ -173,7 +189,9 @@ class _SwipeDeck extends ConsumerWidget {
               const SizedBox(width: 16),
               // Like
               _ActionBtn(
-                icon: mode == 'TRAVELBUDDY' ? Icons.explore : Icons.favorite_rounded,
+                icon: mode == 'TRAVELBUDDY'
+                    ? Icons.explore
+                    : Icons.favorite_rounded,
                 color: Colors.white,
                 bg: activeColor,
                 shadow: activeColor.withOpacity(0.4),
@@ -193,7 +211,13 @@ class _ActionBtn extends StatelessWidget {
   final Color color, bg, shadow;
   final double size;
   final VoidCallback onTap;
-  const _ActionBtn({required this.icon, required this.color, required this.bg, required this.shadow, required this.size, required this.onTap});
+  const _ActionBtn(
+      {required this.icon,
+      required this.color,
+      required this.bg,
+      required this.shadow,
+      required this.size,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +229,9 @@ class _ActionBtn extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           shape: BoxShape.circle,
-          boxShadow: [BoxShadow(color: shadow, blurRadius: 16, offset: const Offset(0, 6))],
+          boxShadow: [
+            BoxShadow(color: shadow, blurRadius: 16, offset: const Offset(0, 6))
+          ],
         ),
         child: Icon(icon, color: color, size: size * 0.46),
       ).animate(onPlay: (c) => c.forward()).scale(begin: const Offset(1, 1)),
@@ -227,9 +253,11 @@ class _EmptyState extends StatelessWidget {
           Icon(Icons.people_outline, size: 80, color: color.withOpacity(0.3)),
           const SizedBox(height: 16),
           Text("You've seen everyone nearby!",
-              style: PlutoTextStyles.headlineSmall.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+              style: PlutoTextStyles.headlineSmall
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface)),
           const SizedBox(height: 8),
-          Text('Try expanding your search radius', style: PlutoTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+          Text('Try expanding your search radius',
+              style: PlutoTextStyles.bodyMedium.copyWith(color: Colors.grey)),
         ],
       ).animate().fadeIn(),
     );

@@ -27,7 +27,8 @@ class ProfileScreen extends ConsumerWidget {
             // ── Header ──────────────────────────────────────────
             SliverToBoxAdapter(
               child: Container(
-                padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 12, 20, 20),
+                padding: EdgeInsets.fromLTRB(
+                    20, MediaQuery.of(context).padding.top + 12, 20, 20),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [activeColor.withOpacity(0.1), Colors.transparent],
@@ -43,7 +44,9 @@ class ProfileScreen extends ConsumerWidget {
                         Text('Profile', style: PlutoTextStyles.headlineLarge),
                         Row(
                           children: [
-                            IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}),
+                            IconButton(
+                                icon: const Icon(Icons.share_outlined),
+                                onPressed: () {}),
                             IconButton(
                               icon: const Icon(Icons.settings_outlined),
                               onPressed: () => context.push('/settings'),
@@ -60,20 +63,28 @@ class ProfileScreen extends ConsumerWidget {
                         CircleAvatar(
                           radius: 52,
                           backgroundColor: activeColor.withOpacity(0.2),
-                          backgroundImage: profile?['photos']?[0]?['gcs_url'] != null
-                              ? NetworkImage(profile!['photos'][0]['gcs_url']) : null,
+                          backgroundImage: profile?['photos']?[0]?['gcs_url'] !=
+                                  null
+                              ? NetworkImage(profile!['photos'][0]['gcs_url'])
+                              : null,
                           child: profile?['photos']?.isEmpty ?? true
-                              ? Icon(Icons.person, size: 52, color: activeColor) : null,
+                              ? Icon(Icons.person, size: 52, color: activeColor)
+                              : null,
                         ),
                         Positioned(
-                          bottom: 0, right: 0,
+                          bottom: 0,
+                          right: 0,
                           child: GestureDetector(
                             onTap: () => context.push('/profile/edit'),
                             child: Container(
                               padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(color: activeColor, shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 2)),
-                              child: const Icon(Icons.edit, color: Colors.white, size: 14),
+                              decoration: BoxDecoration(
+                                  color: activeColor,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: Colors.white, width: 2)),
+                              child: const Icon(Icons.edit,
+                                  color: Colors.white, size: 14),
                             ),
                           ),
                         ),
@@ -88,12 +99,16 @@ class ProfileScreen extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(
                       profile?['occupation'] ?? 'Add your occupation',
-                      style: PlutoTextStyles.bodyMedium.copyWith(color: Colors.grey),
+                      style: PlutoTextStyles.bodyMedium
+                          .copyWith(color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
 
                     // Mode selector
-                    PlutoModeProfileTabs(activeMode: mode, onChanged: (m) => ref.read(appModeProvider.notifier).setMode(m)),
+                    PlutoModeProfileTabs(
+                        activeMode: mode,
+                        onChanged: (m) =>
+                            ref.read(appModeProvider.notifier).setMode(m)),
                   ],
                 ),
               ),
@@ -108,17 +123,38 @@ class ProfileScreen extends ConsumerWidget {
             SliverList(
               delegate: SliverChildListDelegate([
                 _MenuSection(title: 'Account', items: [
-                  _MenuItem(icon: Icons.person_outline, label: 'Edit Profile', onTap: () => context.push('/profile/edit')),
-                  _MenuItem(icon: Icons.interests_outlined, label: 'My Interests', onTap: () => context.push('/profile/interests')),
-                  _MenuItem(icon: Icons.photo_camera_outlined, label: 'Manage Photos', onTap: () {}),
+                  _MenuItem(
+                      icon: Icons.person_outline,
+                      label: 'Edit Profile',
+                      onTap: () => context.push('/profile/edit')),
+                  _MenuItem(
+                      icon: Icons.interests_outlined,
+                      label: 'My Interests',
+                      onTap: () => context.push('/profile/interests')),
+                  _MenuItem(
+                      icon: Icons.photo_camera_outlined,
+                      label: 'Manage Photos',
+                      onTap: () {}),
                 ]),
                 _MenuSection(title: 'Discovery', items: [
-                  _MenuItem(icon: Icons.tune_outlined, label: 'Match Preferences', onTap: () {}),
-                  _MenuItem(icon: Icons.explore_outlined, label: 'Active Modes', onTap: () {}),
+                  _MenuItem(
+                      icon: Icons.tune_outlined,
+                      label: 'Match Preferences',
+                      onTap: () {}),
+                  _MenuItem(
+                      icon: Icons.explore_outlined,
+                      label: 'Active Modes',
+                      onTap: () {}),
                 ]),
                 _MenuSection(title: 'Privacy & Safety', items: [
-                  _MenuItem(icon: Icons.lock_outline, label: 'Privacy Settings', onTap: () {}),
-                  _MenuItem(icon: Icons.block_outlined, label: 'Blocked Users', onTap: () {}),
+                  _MenuItem(
+                      icon: Icons.lock_outline,
+                      label: 'Privacy Settings',
+                      onTap: () {}),
+                  _MenuItem(
+                      icon: Icons.block_outlined,
+                      label: 'Blocked Users',
+                      onTap: () {}),
                 ]),
                 Padding(
                   padding: const EdgeInsets.all(20),
@@ -127,7 +163,11 @@ class ProfileScreen extends ConsumerWidget {
                       await FirebaseAuth.instance.signOut();
                     },
                     icon: const Icon(Icons.logout, color: PlutoColors.error),
-                    label: const Text('Sign Out', style: TextStyle(color: PlutoColors.error, fontFamily: 'Outfit', fontWeight: FontWeight.w600)),
+                    label: const Text('Sign Out',
+                        style: TextStyle(
+                            color: PlutoColors.error,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w600)),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: PlutoColors.error),
                       foregroundColor: PlutoColors.error,
@@ -147,11 +187,16 @@ class ProfileScreen extends ConsumerWidget {
 class PlutoModeProfileTabs extends StatelessWidget {
   final String activeMode;
   final ValueChanged<String> onChanged;
-  const PlutoModeProfileTabs({super.key, required this.activeMode, required this.onChanged});
+  const PlutoModeProfileTabs(
+      {super.key, required this.activeMode, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    const modes = [('DATE', '❤️', 'Date'), ('TRAVELBUDDY', '✈️', 'Travel'), ('BFF', '🤝', 'BFF')];
+    const modes = [
+      ('DATE', '❤️', 'Date'),
+      ('TRAVELBUDDY', '✈️', 'Travel'),
+      ('BFF', '🤝', 'BFF')
+    ];
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: modes.map((m) {
@@ -172,7 +217,12 @@ class PlutoModeProfileTabs extends StatelessWidget {
               children: [
                 Text(m.$2, style: const TextStyle(fontSize: 14)),
                 const SizedBox(width: 4),
-                Text(m.$3, style: TextStyle(fontFamily: 'Outfit', fontSize: 13, fontWeight: FontWeight.w600, color: isActive ? Colors.white : color)),
+                Text(m.$3,
+                    style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: isActive ? Colors.white : color)),
               ],
             ),
           ),
@@ -203,9 +253,14 @@ class _ProfileCompletionCard extends StatelessWidget {
             children: [
               Icon(Icons.star_rounded, color: color, size: 18),
               const SizedBox(width: 8),
-              Text('Profile Strength: Intermediate', style: PlutoTextStyles.titleMedium.copyWith(color: color)),
+              Text('Profile Strength: Intermediate',
+                  style: PlutoTextStyles.titleMedium.copyWith(color: color)),
               const Spacer(),
-              Text('65%', style: TextStyle(fontFamily: 'Outfit', color: color, fontWeight: FontWeight.w700)),
+              Text('65%',
+                  style: TextStyle(
+                      fontFamily: 'Outfit',
+                      color: color,
+                      fontWeight: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 8),
@@ -236,9 +291,11 @@ class _MenuSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-          child: Text(title, style: PlutoTextStyles.labelSmall.copyWith(
-            color: Colors.grey, letterSpacing: 1.5,
-          )),
+          child: Text(title,
+              style: PlutoTextStyles.labelSmall.copyWith(
+                color: Colors.grey,
+                letterSpacing: 1.5,
+              )),
         ),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -267,7 +324,8 @@ class _MenuItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _MenuItem({required this.icon, required this.label, required this.onTap});
+  const _MenuItem(
+      {required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -275,10 +333,15 @@ class _MenuItem extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withOpacity(0.5),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(icon, size: 20, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+        child: Icon(icon,
+            size: 20,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
       ),
       title: Text(label, style: PlutoTextStyles.titleMedium),
       trailing: const Icon(Icons.chevron_right, size: 20, color: Colors.grey),

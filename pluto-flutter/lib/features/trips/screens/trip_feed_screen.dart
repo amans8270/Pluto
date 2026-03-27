@@ -27,7 +27,9 @@ class TripFeedScreen extends ConsumerWidget {
                 children: [
                   const Icon(Icons.menu, size: 24),
                   const SizedBox(width: 12),
-                  Text('Pluto', style: PlutoTextStyles.headlineMedium.copyWith(color: teal, fontWeight: FontWeight.w700)),
+                  Text('Pluto',
+                      style: PlutoTextStyles.headlineMedium
+                          .copyWith(color: teal, fontWeight: FontWeight.w700)),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.notifications_outlined, color: teal),
@@ -45,16 +47,24 @@ class TripFeedScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest
+                            .withOpacity(0.5),
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Row(
                         children: [
                           Icon(Icons.search, size: 18, color: Colors.grey[500]),
                           const SizedBox(width: 8),
-                          Text('Find trips in Delhi', style: TextStyle(color: Colors.grey[500], fontFamily: 'Outfit', fontSize: 14)),
+                          Text('Find trips in Delhi',
+                              style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontFamily: 'Outfit',
+                                  fontSize: 14)),
                         ],
                       ),
                     ),
@@ -76,12 +86,17 @@ class TripFeedScreen extends ConsumerWidget {
             // ── Trip List ────────────────────────────────────────
             Expanded(
               child: tripsAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator(color: teal)),
-                error: (e, _) => Center(child: Text('Failed to load trips')),
+                loading: () =>
+                    const Center(child: CircularProgressIndicator(color: teal)),
+                error: (e, _) =>
+                    const Center(child: Text('Failed to load trips')),
                 data: (trips) => ListView.builder(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
                   itemCount: trips.length,
-                  itemBuilder: (ctx, i) => TripCard(trip: trips[i]).animate().fadeIn(delay: Duration(milliseconds: i * 80)).slideY(begin: 0.15),
+                  itemBuilder: (ctx, i) => TripCard(trip: trips[i])
+                      .animate()
+                      .fadeIn(delay: Duration(milliseconds: i * 80))
+                      .slideY(begin: 0.15),
                 ),
               ),
             ),
@@ -92,7 +107,11 @@ class TripFeedScreen extends ConsumerWidget {
         onPressed: () => context.push('/trips/create'),
         backgroundColor: teal,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Create Trip', style: TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.w600, color: Colors.white)),
+        label: const Text('Create Trip',
+            style: TextStyle(
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w600,
+                color: Colors.white)),
       ),
     );
   }
@@ -117,7 +136,12 @@ class TripCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 16, offset: const Offset(0, 4))],
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.06),
+                blurRadius: 16,
+                offset: const Offset(0, 4))
+          ],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
@@ -131,28 +155,40 @@ class TripCard extends StatelessWidget {
                     height: 180,
                     width: double.infinity,
                     child: trip['cover_image_url'] != null
-                        ? CachedNetworkImage(imageUrl: trip['cover_image_url'], fit: BoxFit.cover)
+                        ? CachedNetworkImage(
+                            imageUrl: trip['cover_image_url'],
+                            fit: BoxFit.cover)
                         : Container(
                             color: PlutoColors.travel.withOpacity(0.15),
-                            child: const Icon(Icons.landscape, size: 60, color: PlutoColors.travel),
+                            child: const Icon(Icons.landscape,
+                                size: 60, color: PlutoColors.travel),
                           ),
                   ),
                   // Creator avatar
                   Positioned(
-                    top: 12, left: 12,
+                    top: 12,
+                    left: 12,
                     child: Row(
                       children: [
                         CircleAvatar(
                           radius: 16,
                           backgroundImage: trip['creator_photo'] != null
-                              ? NetworkImage(trip['creator_photo']) : null,
+                              ? NetworkImage(trip['creator_photo'])
+                              : null,
                           backgroundColor: PlutoColors.travel.withOpacity(0.3),
-                          child: trip['creator_photo'] == null ? const Icon(Icons.person, size: 16, color: Colors.white) : null,
+                          child: trip['creator_photo'] == null
+                              ? const Icon(Icons.person,
+                                  size: 16, color: Colors.white)
+                              : null,
                         ),
                         const SizedBox(width: 6),
                         Text(
                           trip['creator_name'] ?? 'Organizer',
-                          style: const TextStyle(fontFamily: 'Outfit', color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -160,11 +196,20 @@ class TripCard extends StatelessWidget {
                   // Spots left badge
                   if (spotsLeft <= 3 && spotsLeft > 0)
                     Positioned(
-                      top: 12, right: 12,
+                      top: 12,
+                      right: 12,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(color: PlutoColors.dating, borderRadius: BorderRadius.circular(20)),
-                        child: Text('$spotsLeft spots left', style: const TextStyle(fontFamily: 'Outfit', color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                            color: PlutoColors.dating,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Text('$spotsLeft spots left',
+                            style: const TextStyle(
+                                fontFamily: 'Outfit',
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600)),
                       ),
                     ),
                 ],
@@ -180,20 +225,33 @@ class TripCard extends StatelessWidget {
                       children: [
                         if (trip['category'] != null)
                           Text(trip['category'].toString().toUpperCase(),
-                              style: const TextStyle(fontFamily: 'Outfit', color: PlutoColors.travel, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+                              style: const TextStyle(
+                                  fontFamily: 'Outfit',
+                                  color: PlutoColors.travel,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5)),
                         const Spacer(),
-                        Text(_feeToSymbol(fee), style: const TextStyle(fontFamily: 'Outfit', color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w600)),
+                        Text(_feeToSymbol(fee),
+                            style: const TextStyle(
+                                fontFamily: 'Outfit',
+                                color: Colors.grey,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600)),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(trip['title'] ?? '', style: PlutoTextStyles.headlineSmall),
+                    Text(trip['title'] ?? '',
+                        style: PlutoTextStyles.headlineSmall),
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey),
+                        const Icon(Icons.calendar_today_outlined,
+                            size: 14, color: Colors.grey),
                         const SizedBox(width: 4),
                         Text(_formatDates(trip['start_date'], trip['end_date']),
-                            style: PlutoTextStyles.bodySmall.copyWith(color: Colors.grey)),
+                            style: PlutoTextStyles.bodySmall
+                                .copyWith(color: Colors.grey)),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -201,25 +259,39 @@ class TripCard extends StatelessWidget {
                       children: [
                         // Member stacks
                         SizedBox(
-                          width: 60, height: 28,
+                          width: 60,
+                          height: 28,
                           child: Stack(
-                            children: List.generate(3, (i) => Positioned(
-                              left: i * 18.0,
-                              child: CircleAvatar(radius: 14, backgroundColor: PlutoColors.travel.withOpacity(0.2 + i * 0.15)),
-                            )),
+                            children: List.generate(
+                                3,
+                                (i) => Positioned(
+                                      left: i * 18.0,
+                                      child: CircleAvatar(
+                                          radius: 14,
+                                          backgroundColor: PlutoColors.travel
+                                              .withOpacity(0.2 + i * 0.15)),
+                                    )),
                           ),
                         ),
                         const SizedBox(width: 6),
                         if (joined > 3)
-                          Text('+${joined - 3}', style: PlutoTextStyles.bodySmall.copyWith(color: Colors.grey)),
+                          Text('+${joined - 3}',
+                              style: PlutoTextStyles.bodySmall
+                                  .copyWith(color: Colors.grey)),
                         const Spacer(),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 8),
                           decoration: BoxDecoration(
                             color: PlutoColors.travel,
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: const Text('View Trip', style: TextStyle(fontFamily: 'Outfit', color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+                          child: const Text('View Trip',
+                              style: TextStyle(
+                                  fontFamily: 'Outfit',
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600)),
                         ),
                       ],
                     ),

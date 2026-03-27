@@ -21,6 +21,7 @@ import '../../features/profile/screens/interests_screen.dart';
 import '../../features/nearby/screens/nearby_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import '../../shared/screens/shell_screen.dart';
+import '../../features/profile/screens/signup_interests_screen.dart';
 import '../providers/auth_provider.dart';
 import '../../features/profile/providers/profile_provider.dart';
 
@@ -77,6 +78,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
       GoRoute(path: '/login',  builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
+      GoRoute(path: '/onboarding/interests', builder: (_, __) => const SignUpInterestsScreen()),
 
       // ── Main Shell (bottom nav) ───────────────────────────────
       ShellRoute(

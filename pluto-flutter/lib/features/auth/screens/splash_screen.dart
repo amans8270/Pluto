@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 
@@ -36,10 +35,10 @@ class SplashScreen extends ConsumerWidget {
                 ],
               ),
               child: const Icon(Icons.public, color: Colors.white, size: 48),
-            )
-                .animate()
-                .fadeIn(duration: 600.ms)
-                .scale(begin: const Offset(0.7, 0.7), end: const Offset(1, 1), curve: Curves.elasticOut),
+            ).animate().fadeIn(duration: 600.ms).scale(
+                begin: const Offset(0.7, 0.7),
+                end: const Offset(1, 1),
+                curve: Curves.elasticOut),
             const SizedBox(height: 24),
             const Text(
               'Pluto',
@@ -50,7 +49,10 @@ class SplashScreen extends ConsumerWidget {
                 color: Colors.white,
                 letterSpacing: -1,
               ),
-            ).animate().fadeIn(delay: 300.ms, duration: 500.ms).slideY(begin: 0.3, end: 0),
+            )
+                .animate()
+                .fadeIn(delay: 300.ms, duration: 500.ms)
+                .slideY(begin: 0.3, end: 0),
             const SizedBox(height: 8),
             Text(
               'Date • Travel • Connect',

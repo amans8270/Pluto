@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pinput/pinput.dart';
 
@@ -40,7 +39,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Google Sign-In failed: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Google Sign-In failed: $e')));
       }
     }
   }
@@ -55,10 +55,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       },
       verificationFailed: (e) {
         setState(() => _loading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message ?? 'Error')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message ?? 'Error')));
       },
       codeSent: (verificationId, _) {
-        setState(() { _verificationId = verificationId; _otpSent = true; _loading = false; });
+        setState(() {
+          _verificationId = verificationId;
+          _otpSent = true;
+          _loading = false;
+        });
       },
       codeAutoRetrievalTimeout: (_) {},
     );
@@ -68,28 +73,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (_verificationId == null) return;
     setState(() => _loading = true);
     try {
-      final cred = PhoneAuthProvider.credential(verificationId: _verificationId!, smsCode: otp);
+      final cred = PhoneAuthProvider.credential(
+          verificationId: _verificationId!, smsCode: otp);
       await FirebaseAuth.instance.signInWithCredential(cred);
       // app_router handles redirect
     } catch (e) {
       setState(() => _loading = false);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid OTP. Try again.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid OTP. Try again.')));
     }
   }
 
-  Widget _buildSocialButton({required IconData icon, required String text, required VoidCallback onTap, required Color bgColor, required Color textColor}) {
+  Widget _buildSocialButton(
+      {required IconData icon,
+      required String text,
+      required VoidCallback onTap,
+      required Color bgColor,
+      required Color textColor}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: ElevatedButton.icon(
         onPressed: _loading ? null : onTap,
         icon: Icon(icon, color: textColor),
-        label: Text(text, style: TextStyle(fontFamily: 'Outfit', fontSize: 16, fontWeight: FontWeight.w600, color: textColor)),
+        label: Text(text,
+            style: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: textColor)),
         style: ElevatedButton.styleFrom(
           backgroundColor: bgColor,
           foregroundColor: textColor,
           minimumSize: const Size(double.infinity, 54),
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
     );
@@ -114,13 +132,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(Icons.public, color: Colors.white, size: 40),
-              ).animate().fadeIn(duration: 500.ms).scale(begin: const Offset(0.8, 0.8)),
+              )
+                  .animate()
+                  .fadeIn(duration: 500.ms)
+                  .scale(begin: const Offset(0.8, 0.8)),
               const SizedBox(height: 16),
-              const Text('Pluto', style: TextStyle(fontFamily: 'Outfit', fontSize: 36, fontWeight: FontWeight.w700, color: Colors.black)),
+              const Text('Pluto',
+                  style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 36,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black)),
               const SizedBox(height: 8),
               Text(
                 'Explore the universe within.',
-                style: TextStyle(fontFamily: 'Outfit', fontSize: 16, color: Colors.grey.shade600),
+                style: TextStyle(
+                    fontFamily: 'Outfit',
+                    fontSize: 16,
+                    color: Colors.grey.shade600),
               ),
               const Spacer(),
 
@@ -131,9 +160,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   text: 'Continue with Email',
                   bgColor: PlutoColors.dark,
                   textColor: Colors.white,
-                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Coming soon!'))),
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Coming soon!'))),
                 ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1),
-                
+
                 _buildSocialButton(
                   icon: Icons.phone_android,
                   text: 'Continue with Mobile',
@@ -153,7 +183,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 32),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('Create an account', style: TextStyle(fontFamily: 'Outfit', color: Colors.blueAccent, fontWeight: FontWeight.w600)),
+                  child: const Text('Create an account',
+                      style: TextStyle(
+                          fontFamily: 'Outfit',
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.w600)),
                 ).animate().fadeIn(delay: 400.ms),
               ] else if (!_otpSent) ...[
                 // Phone input
@@ -163,30 +197,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () => setState(() => _showPhoneInput = false),
                     ),
-                    const Expanded(child: Text('Enter your phone number', style: TextStyle(fontFamily: 'Outfit', fontSize: 18, fontWeight: FontWeight.w600))),
+                    const Expanded(
+                        child: Text('Enter your phone number',
+                            style: TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600))),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(16)),
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(16)),
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        child: const Text('+91', style: TextStyle(color: Colors.black, fontFamily: 'Outfit', fontSize: 16, fontWeight: FontWeight.w600)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        child: const Text('+91',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'Outfit',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600)),
                       ),
                       Container(width: 1, height: 24, color: Colors.black12),
                       Expanded(
                         child: TextField(
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
-                          style: const TextStyle(color: Colors.black, fontFamily: 'Outfit', fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Outfit',
+                              fontSize: 16),
                           maxLength: 10,
                           decoration: const InputDecoration(
                             hintText: 'Phone number',
                             border: InputBorder.none,
                             counterText: '',
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 16),
                           ),
                         ),
                       ),
@@ -200,11 +251,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     backgroundColor: PlutoColors.dark,
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 54),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
                   ),
                   child: _loading
-                      ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                      : const Text('Get OTP', style: TextStyle(fontFamily: 'Outfit', fontSize: 16, fontWeight: FontWeight.w600)),
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 2))
+                      : const Text('Get OTP',
+                          style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600)),
                 ),
               ] else ...[
                 // OTP Pinput
@@ -214,7 +274,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () => setState(() => _otpSent = false),
                     ),
-                    const Expanded(child: Text('Enter the OTP', style: TextStyle(fontFamily: 'Outfit', fontSize: 18, fontWeight: FontWeight.w600))),
+                    const Expanded(
+                        child: Text('Enter the OTP',
+                            style: TextStyle(
+                                fontFamily: 'Outfit',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600))),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -226,13 +291,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     defaultPinTheme: PinTheme(
                       width: 52,
                       height: 56,
-                      textStyle: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600, fontFamily: 'Outfit'),
-                      decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(14)),
+                      textStyle: const TextStyle(
+                          fontSize: 22,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Outfit'),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(14)),
                     ),
                     focusedPinTheme: PinTheme(
                       width: 52,
                       height: 56,
-                      textStyle: const TextStyle(fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600, fontFamily: 'Outfit'),
+                      textStyle: const TextStyle(
+                          fontSize: 22,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Outfit'),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(14),
@@ -251,7 +326,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Text(
                   'By continuing, you agree to our Terms of Service and\nPrivacy Policy',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey.shade500, fontSize: 11, fontFamily: 'Outfit'),
+                  style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 11,
+                      fontFamily: 'Outfit'),
                 ),
               ),
             ],

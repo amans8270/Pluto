@@ -17,8 +17,9 @@ class TripDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       body: tripAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator(color: PlutoColors.travel)),
-        error: (e, _) => Center(child: Text('Failed to load trip')),
+        loading: () => const Center(
+            child: CircularProgressIndicator(color: PlutoColors.travel)),
+        error: (e, _) => const Center(child: Text('Failed to load trip')),
         data: (trip) => _TripDetailBody(trip: trip),
       ),
       bottomNavigationBar: tripAsync.when(
@@ -57,10 +58,12 @@ class _TripBottomBar extends ConsumerWidget {
         children: [
           _BottomButton(
             label: 'Vote on Applicants',
-            onPressed: () => context.push('/trips/$tripId/applicants'), // Members can also view and vote
+            onPressed: () => context.push(
+                '/trips/$tripId/applicants'), // Members can also view and vote
             color: Colors.blueAccent,
           ),
-          const _StatusBadge(label: 'You are a member! 🎉', color: Colors.green),
+          const _StatusBadge(
+              label: 'You are a member! 🎉', color: Colors.green),
         ],
       );
     }
@@ -69,24 +72,30 @@ class _TripBottomBar extends ConsumerWidget {
       case 'NONE':
         return _BottomButton(
           label: 'Apply to Join',
-          onPressed: () => ref.read(workflowActionProvider.notifier).apply(tripId),
+          onPressed: () =>
+              ref.read(workflowActionProvider.notifier).apply(tripId),
           color: PlutoColors.travel,
           isLoading: actionState.isLoading,
         );
       case 'APPLIED':
-        return const _StatusBadge(label: 'Wait: Pending Owner Approval ⏳', color: Colors.orange);
+        return const _StatusBadge(
+            label: 'Wait: Pending Owner Approval ⏳', color: Colors.orange);
       case 'GROUP_PENDING':
-        return const _StatusBadge(label: 'Wait: Awaiting Group Votes 🗳️', color: Colors.blueGrey);
+        return const _StatusBadge(
+            label: 'Wait: Awaiting Group Votes 🗳️', color: Colors.blueGrey);
       case 'GROUP_APPROVED':
         return _BottomButton(
           label: 'Pay ₹11 to Join',
-          onPressed: () => context.push('/applications/$appBarId/pay?tripId=$tripId'),
+          onPressed: () =>
+              context.push('/applications/$appBarId/pay?tripId=$tripId'),
           color: Colors.green,
         );
       case 'FINALIZED':
-        return const _StatusBadge(label: 'Membership Confirmed! ✅', color: Colors.green);
+        return const _StatusBadge(
+            label: 'Membership Confirmed! ✅', color: Colors.green);
       case 'REJECTED':
-        return const _StatusBadge(label: 'Application Not Approved', color: Colors.red);
+        return const _StatusBadge(
+            label: 'Application Not Approved', color: Colors.red);
       default:
         return const SizedBox.shrink();
     }
@@ -105,27 +114,38 @@ class _BottomButton extends StatelessWidget {
     required this.onPressed,
     required this.color,
     this.isLoading = false,
-    this.labelOverride,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.of(context).padding.bottom + 12),
+      padding: EdgeInsets.fromLTRB(
+          20, 12, 20, MediaQuery.of(context).padding.bottom + 12),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5))
+        ],
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           minimumSize: const Size(double.infinity, 54),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
             ? const CircularProgressIndicator(color: Colors.white)
-            : Text(labelOverride ?? label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Outfit')),
+            : Text(labelOverride ?? label,
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontFamily: 'Outfit')),
       ),
     );
   }
@@ -140,12 +160,17 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(20, 16, 20, MediaQuery.of(context).padding.bottom + 16),
+      padding: EdgeInsets.fromLTRB(
+          20, 16, 20, MediaQuery.of(context).padding.bottom + 16),
       color: color.withOpacity(0.1),
       child: Text(
         label,
         textAlign: TextAlign.center,
-        style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 15, fontFamily: 'Outfit'),
+        style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            fontFamily: 'Outfit'),
       ),
     );
   }
@@ -172,21 +197,29 @@ class _TripDetailBody extends StatelessWidget {
             onTap: () => context.pop(),
             child: Container(
               margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                  color: Colors.black38, shape: BoxShape.circle),
               child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
           ),
           actions: [
             Container(
               margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: Colors.black38, shape: BoxShape.circle),
-              child: IconButton(icon: const Icon(Icons.favorite_border, color: Colors.white), onPressed: () {}),
+              decoration: const BoxDecoration(
+                  color: Colors.black38, shape: BoxShape.circle),
+              child: IconButton(
+                  icon: const Icon(Icons.favorite_border, color: Colors.white),
+                  onPressed: () {}),
             ),
           ],
           flexibleSpace: FlexibleSpaceBar(
             background: trip['cover_image_url'] != null
-                ? CachedNetworkImage(imageUrl: trip['cover_image_url'], fit: BoxFit.cover)
-                : Container(color: PlutoColors.travel.withOpacity(0.3), child: const Icon(Icons.landscape, size: 80, color: PlutoColors.travel)),
+                ? CachedNetworkImage(
+                    imageUrl: trip['cover_image_url'], fit: BoxFit.cover)
+                : Container(
+                    color: PlutoColors.travel.withOpacity(0.3),
+                    child: const Icon(Icons.landscape,
+                        size: 80, color: PlutoColors.travel)),
           ),
         ),
 
@@ -200,10 +233,15 @@ class _TripDetailBody extends StatelessWidget {
                 // Category + days
                 Row(
                   children: [
-                    _Chip(label: trip['category'] ?? 'TRIP', color: PlutoColors.travel),
+                    _Chip(
+                        label: trip['category'] ?? 'TRIP',
+                        color: PlutoColors.travel),
                     const SizedBox(width: 8),
                     if (trip['start_date'] != null && trip['end_date'] != null)
-                      _Chip(label: '${_tripDays(trip['start_date'], trip['end_date'])} DAYS', color: Colors.orange),
+                      _Chip(
+                          label:
+                              '${_tripDays(trip['start_date'], trip['end_date'])} DAYS',
+                          color: Colors.orange),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -215,9 +253,12 @@ class _TripDetailBody extends StatelessWidget {
                 // Location
                 Row(
                   children: [
-                    const Icon(Icons.location_on, color: PlutoColors.travel, size: 16),
+                    const Icon(Icons.location_on,
+                        color: PlutoColors.travel, size: 16),
                     const SizedBox(width: 4),
-                    Text(trip['destination'] ?? '', style: PlutoTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                    Text(trip['destination'] ?? '',
+                        style: PlutoTextStyles.bodyMedium
+                            .copyWith(color: Colors.grey)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -225,9 +266,13 @@ class _TripDetailBody extends StatelessWidget {
                 // Stats row
                 Row(
                   children: [
-                    _StatItem(label: 'Level', value: trip['difficulty'] ?? 'Easy'),
-                    _StatItem(label: 'Temp', value: trip['temperature'] ?? '--'),
-                    _StatItem(label: 'Group', value: '${trip['max_members'] ?? '--'} Max'),
+                    _StatItem(
+                        label: 'Level', value: trip['difficulty'] ?? 'Easy'),
+                    _StatItem(
+                        label: 'Temp', value: trip['temperature'] ?? '--'),
+                    _StatItem(
+                        label: 'Group',
+                        value: '${trip['max_members'] ?? '--'} Max'),
                   ],
                 ),
                 const Divider(height: 32),
@@ -236,7 +281,9 @@ class _TripDetailBody extends StatelessWidget {
                 if (trip['description'] != null) ...[
                   Text('About This Trip', style: PlutoTextStyles.headlineSmall),
                   const SizedBox(height: 8),
-                  Text(trip['description'], style: PlutoTextStyles.bodyMedium.copyWith(color: Colors.grey[700], height: 1.6)),
+                  Text(trip['description'],
+                      style: PlutoTextStyles.bodyMedium
+                          .copyWith(color: Colors.grey[700], height: 1.6)),
                   const Divider(height: 32),
                 ],
 
@@ -246,17 +293,24 @@ class _TripDetailBody extends StatelessWidget {
                 GestureDetector(
                   onTap: () => context.push('/trips/${trip['id']}/members'),
                   child: Text('${trip['joined_count'] ?? 0} joined',
-                      style: PlutoTextStyles.bodySmall.copyWith(color: PlutoColors.travel, fontWeight: FontWeight.w600)),
+                      style: PlutoTextStyles.bodySmall.copyWith(
+                          color: PlutoColors.travel,
+                          fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 12),
                 SizedBox(
                   height: 44,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: (trip['joined_count'] ?? 0) > 5 ? 6 : (trip['joined_count'] ?? 0),
+                    itemCount: (trip['joined_count'] ?? 0) > 5
+                        ? 6
+                        : (trip['joined_count'] ?? 0),
                     itemBuilder: (_, i) => Container(
                       margin: const EdgeInsets.only(right: 8),
-                      child: CircleAvatar(radius: 22, backgroundColor: PlutoColors.travel.withOpacity(0.2 + i * 0.1)),
+                      child: CircleAvatar(
+                          radius: 22,
+                          backgroundColor:
+                              PlutoColors.travel.withOpacity(0.2 + i * 0.1)),
                     ),
                   ),
                 ),
@@ -274,19 +328,30 @@ class _TripDetailBody extends StatelessWidget {
       final s = DateTime.parse(start);
       final e = DateTime.parse(end);
       return e.difference(s).inDays + 1;
-    } catch (_) { return 1; }
+    } catch (_) {
+      return 1;
+    }
   }
 }
 
 class _Chip extends StatelessWidget {
-  final String label; final Color color;
+  final String label;
+  final Color color;
   const _Chip({required this.label, required this.color});
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-    decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
-    child: Text(label, style: TextStyle(fontFamily: 'Outfit', color: color, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+            color: color.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(20)),
+        child: Text(label,
+            style: TextStyle(
+                fontFamily: 'Outfit',
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5)),
+      );
 }
 
 class _StatItem extends StatelessWidget {
@@ -294,12 +359,13 @@ class _StatItem extends StatelessWidget {
   const _StatItem({required this.label, required this.value});
   @override
   Widget build(BuildContext context) => Expanded(
-    child: Column(
-      children: [
-        Text(label, style: PlutoTextStyles.bodySmall.copyWith(color: Colors.grey)),
-        const SizedBox(height: 2),
-        Text(value, style: PlutoTextStyles.titleMedium),
-      ],
-    ),
-  );
+        child: Column(
+          children: [
+            Text(label,
+                style: PlutoTextStyles.bodySmall.copyWith(color: Colors.grey)),
+            const SizedBox(height: 2),
+            Text(value, style: PlutoTextStyles.titleMedium),
+          ],
+        ),
+      );
 }

@@ -4,7 +4,8 @@ import '../../core/theme/app_theme.dart';
 class PlutoModeTabs extends StatelessWidget {
   final String selectedMode;
   final ValueChanged<String> onModeChanged;
-  const PlutoModeTabs({super.key, required this.selectedMode, required this.onModeChanged});
+  const PlutoModeTabs(
+      {super.key, required this.selectedMode, required this.onModeChanged});
 
   static const _modes = [
     ('DATE', 'Date'),
@@ -19,7 +20,10 @@ class PlutoModeTabs extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withOpacity(0.5),
           borderRadius: BorderRadius.circular(50),
         ),
         child: Row(
@@ -37,7 +41,12 @@ class PlutoModeTabs extends StatelessWidget {
                     color: isSelected ? color : Colors.transparent,
                     borderRadius: BorderRadius.circular(50),
                     boxShadow: isSelected
-                        ? [BoxShadow(color: color.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 2))]
+                        ? [
+                            BoxShadow(
+                                color: color.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2))
+                          ]
                         : null,
                   ),
                   child: Text(
@@ -46,8 +55,14 @@ class PlutoModeTabs extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Outfit',
                       fontSize: 13,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected ? Colors.white : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? Colors.white
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
                     ),
                   ),
                 ),
