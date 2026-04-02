@@ -1,0 +1,99 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: pluto-backend
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/launch-stage: GA
+
+spec:
+  template:
+    metadata:
+      annotations:
+        # Autoscaling
+        autoscaling.knative.dev/minScale: '1'
+        autoscaling.knative.dev/maxScale: '20'
+        # VPC for AlloyDB + Memorystore
+        run.googleapis.com/vpc-access-connector: projects/pluto-backend-490622/locations/us-east4/connectors/pluto-vpc-connector
+        run.googleapis.com/vpc-access-egress: private-ranges-only
+        # Cold start optimisation
+        run.googleapis.com/startup-cpu-boost: 'true'
+    spec:
+      containerConcurrency: 100
+      timeoutSeconds: 60
+
+      containers:
+        - image: asia.gcr.io/pluto-backend-490622/pluto-backend:latest
+          name: pluto-backend
+
+          resources:
+            limits:
+              cpu: '2'
+              memory: 2Gi
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            # ── App ────────────────────────────────────────────────
+            - name: ENV
+              value: prod
+            - name: PORT
+              value: '8080'
+            - name: APP_ENV
+              value: production
+            - name: LOG_LEVEL
+              value: INFO
+
+            # ── Database (AlloyDB) ─────────────────────────────────
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: DATABASE_URL
+                  key: 'latest'
+
+            # ── Valkey (Memorystore) ────────────────────────────────
+            - name: VALKEY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: VALKEY_URL
+                  key: 'latest'
+
+            # ── Firebase ───────────────────────────────────────────
+            - name: FIREBASE_CREDENTIALS_JSON
+              valueFrom:
+                secretKeyRef:
+                  name: FIREBASE_CREDENTIALS_JSON
+                  key: 'latest'
+
+            # ── GCS ───────────────────────────────────────────────
+            - name: GCS_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: GCS_BUCKET_NAME
+                  key: 'latest'
+            - name: GCS_PROJECT_ID
+              value: pluto-backend-490622
+
+            # ── CORS ──────────────────────────────────────────────
+            - name: CORS_ORIGINS
+              value: '*'
+
+          # Allow up to 120s for app to boot (Firebase init + DB pool setup)
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 12
+            timeoutSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 5

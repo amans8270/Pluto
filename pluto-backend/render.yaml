@@ -1,0 +1,31 @@
+services:
+  - name: pluto-backend
+    type: web
+    region: singapore
+    env: python
+    repo: https://github.com/amans8270/Pluto
+    branch: master
+    pythonVersion: "3.12"
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: DATABASE_URL
+        value: postgresql+asyncpg://postgres:Amansingh@01@db.esedlxfmzwndjhqboknl.supabase.co:5432/postgres
+      - key: SUPABASE_URL
+        value: https://esedlxfmzwndjhqboknl.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzZWRseGZtenduZGpocWJva25sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4OTkzNjgsImV4cCI6MjA5MDQ3NTM2OH0.DofVsBGyln0Olxjr8ZvsYV7kWU6OjlwTPVKTHqp4nX4
+      - key: SUPABASE_SERVICE_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzZWRseGZtenduZGpocWJva25sIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDg5OTM2OCwiZXhwIjoyMDkwNDc1MzY4fQ.dMNBo6ZG8-0yt2AaWMvcceiHgAUgaE36GGtGO02lbYs
+      - key: SECRET_KEY
+        value: ${random-secret}
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "100"
+    autoDeploy: true
+    healthCheckPath: /health
