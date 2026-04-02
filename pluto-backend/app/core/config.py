@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "change-me"
     LOG_LEVEL: str = "INFO"
 
-    # Database & Cache
+    # Database
     DATABASE_URL: str
     DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     SUPABASE_ANON_KEY: str = ""
     SUPABASE_SERVICE_KEY: str = ""
 
-    # GCS
+    # Optional GCS fallback
     GCS_BUCKET_NAME: str = "pluto-media-bucket"
     GCS_PROJECT_ID: str = ""
 

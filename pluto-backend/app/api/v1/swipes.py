@@ -26,7 +26,7 @@ async def discover(
 ):
     """
     Get a paginated list of candidate profiles for the swipe deck.
-    Results are cached per user in Redis (TTL 5 min).
+    Results are cached per user in memory (TTL 5 min).
     """
     service = MatchService(db)
     candidates = await service.get_discover_feed(

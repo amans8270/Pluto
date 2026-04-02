@@ -46,3 +46,12 @@ Thumbs.db
 
 # Uploads (test files)
 static/uploads/
+
+# Local backend artifacts
+.fastapicloud/
+api-crash.txt
+crash*.txt
+*.log
+*resp.json
+google-services .json
+serviceAccountKey.json

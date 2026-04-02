@@ -34,3 +34,12 @@ Thumbs.db
 # Project-specific
 pluto-node-backend/
 out.txt
+lib/
+pluto-flutter/build_output.txt
+pluto-backend/.fastapicloud/
+pluto-backend/crash*.txt
+pluto-backend/api-crash.txt
+pluto-backend/*.log
+pluto-backend/*resp.json
+pluto-backend/google-services .json
+pluto-backend/serviceAccountKey.json
