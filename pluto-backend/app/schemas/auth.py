@@ -12,5 +12,6 @@ class AuthResponse(BaseModel):
     user_id: str
     supabase_uid: str
     email: str | None
+    auth_provider: str | None = None
     is_new_user: bool
     needs_onboarding: bool

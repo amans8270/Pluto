@@ -34,7 +34,7 @@ Thumbs.db
 # Project-specific
 pluto-node-backend/
 out.txt
-lib/
+/lib/
 pluto-flutter/build_output.txt
 pluto-backend/.fastapicloud/
 pluto-backend/crash*.txt

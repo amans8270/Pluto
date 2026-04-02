@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LocationService {
   Future<Position?> getCurrentLocation() async {
@@ -28,8 +28,10 @@ class LocationService {
     // continue accessing the position of the device.
     try {
       return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low,
-        timeLimit: const Duration(seconds: 5),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.low,
+          timeLimit: Duration(seconds: 5),
+        ),
       );
     } catch (e) {
       return null;

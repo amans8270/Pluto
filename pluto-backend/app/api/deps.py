@@ -2,8 +2,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.auth import verify_auth_token
 from app.core.database import get_db
-from app.core.supabase import verify_supabase_token
 from app.models.user import User
 from app.repositories.user_repo import UserRepository
 
@@ -20,7 +20,7 @@ async def get_current_user(
     """
     token = credentials.credentials
     try:
-        claims = await verify_supabase_token(token)
+        claims = await verify_auth_token(token)
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -28,19 +28,19 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    supabase_uid = claims.get("sub")
-    if not supabase_uid:
+    auth_uid = claims.get("sub")
+    if not auth_uid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token claims"
         )
 
     repo = UserRepository(db)
-    user = await repo.get_by_supabase_uid(supabase_uid)
+    user = await repo.get_by_supabase_uid(auth_uid)
 
     if not user:
         # JIT Provisioning: Create user record if valid token but no DB entry
         user = await repo.create(
-            supabase_uid=supabase_uid,
+            supabase_uid=auth_uid,
             email=claims.get("email"),
             phone=claims.get("phone"),
         )

@@ -107,7 +107,6 @@ class _BottomButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Color color;
   final bool isLoading;
-  final String? labelOverride;
 
   const _BottomButton({
     required this.label,
@@ -125,7 +124,7 @@ class _BottomButton extends StatelessWidget {
         color: Theme.of(context).scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, -5))
         ],
@@ -140,7 +139,7 @@ class _BottomButton extends StatelessWidget {
         onPressed: isLoading ? null : onPressed,
         child: isLoading
             ? const CircularProgressIndicator(color: Colors.white)
-            : Text(labelOverride ?? label,
+            : Text(label,
                 style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -162,7 +161,7 @@ class _StatusBadge extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.fromLTRB(
           20, 16, 20, MediaQuery.of(context).padding.bottom + 16),
-      color: color.withOpacity(0.1),
+      color: color.withValues(alpha: 0.1),
       child: Text(
         label,
         textAlign: TextAlign.center,
@@ -182,10 +181,6 @@ class _TripDetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spotsLeft = trip['spots_left'] ?? 0;
-    final fee = trip['entry_fee_inr'] ?? 0;
-    final hasFee = (fee as num) > 0;
-
     return CustomScrollView(
       slivers: [
         // ── Hero Image ─────────────────────────────────────────
@@ -217,7 +212,7 @@ class _TripDetailBody extends StatelessWidget {
                 ? CachedNetworkImage(
                     imageUrl: trip['cover_image_url'], fit: BoxFit.cover)
                 : Container(
-                    color: PlutoColors.travel.withOpacity(0.3),
+                    color: PlutoColors.travel.withValues(alpha: 0.3),
                     child: const Icon(Icons.landscape,
                         size: 80, color: PlutoColors.travel)),
           ),
@@ -310,7 +305,9 @@ class _TripDetailBody extends StatelessWidget {
                       child: CircleAvatar(
                           radius: 22,
                           backgroundColor:
-                              PlutoColors.travel.withOpacity(0.2 + i * 0.1)),
+                              PlutoColors.travel.withValues(
+                                alpha: 0.2 + i * 0.1,
+                              )),
                     ),
                   ),
                 ),
@@ -342,7 +339,7 @@ class _Chip extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(20)),
         child: Text(label,
             style: TextStyle(

@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user
+from app.core.auth import verify_auth_token
 from app.core.database import get_db
-from app.core.supabase import verify_supabase_token
 from app.models.user import User
 from app.repositories.user_repo import UserRepository
 from app.schemas.auth import AuthVerifyRequest, AuthResponse
@@ -23,20 +23,20 @@ async def verify_token(
     Returns basic user info and whether onboarding is needed.
     """
     try:
-        claims = await verify_supabase_token(body.id_token)
+        claims = await verify_auth_token(body.id_token)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
 
-    supabase_uid = claims["sub"]
+    auth_uid = claims["sub"]
     repo = UserRepository(db)
 
-    user = await repo.get_by_supabase_uid(supabase_uid)
+    user = await repo.get_by_supabase_uid(auth_uid)
     is_new_user = False
 
     if not user:
         # Create new user record
         user = await repo.create(
-            supabase_uid=supabase_uid,
+            supabase_uid=auth_uid,
             email=claims.get("email"),
             phone=claims.get("phone"),
         )
@@ -51,6 +51,7 @@ async def verify_token(
         user_id=str(user.id),
         supabase_uid=user.supabase_uid,
         email=user.email,
+        auth_provider=claims.get("provider"),
         is_new_user=is_new_user,
         needs_onboarding=not user.profile or not user.profile.is_profile_complete,
     )

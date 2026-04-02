@@ -39,8 +39,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       if (authState.isLoading) return null;
 
-      final session = authState.valueOrNull?.session;
-      final isLoggedIn = session != null;
+      final isLoggedIn = authState.valueOrNull != null;
       final hasSeenOnboarding = cache.getBool('has_seen_onboarding') ?? false;
       final location = state.matchedLocation;
 

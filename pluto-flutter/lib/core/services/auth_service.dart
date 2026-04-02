@@ -1,6 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../network/dio_client.dart';
 import 'cache_service.dart';
@@ -8,7 +8,7 @@ import 'secure_storage_service.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService(
-    Supabase.instance.client,
+    FirebaseAuth.instance,
     ref.watch(dioProvider),
     ref.watch(cacheServiceProvider),
     ref.watch(secureStorageServiceProvider),
@@ -16,12 +16,12 @@ final authServiceProvider = Provider<AuthService>((ref) {
 });
 
 class AuthService {
-  final SupabaseClient _supabase;
+  final FirebaseAuth _auth;
   final Dio _dio;
   final CacheService _cache;
   final SecureStorageService _secureStorage;
 
-  AuthService(this._supabase, this._dio, this._cache, this._secureStorage);
+  AuthService(this._auth, this._dio, this._cache, this._secureStorage);
 
   Future<void> _clearSessionData() async {
     final hasSeenOnboarding = _cache.getBool('has_seen_onboarding') ?? false;
@@ -34,23 +34,23 @@ class AuthService {
 
   /// Sign out and clear all local data
   Future<void> signOut() async {
-    await _supabase.auth.signOut();
+    await _auth.signOut();
     await _clearSessionData();
   }
 
   /// Delete account
   Future<void> deleteAccount() async {
-    final userId = _supabase.auth.currentUser?.id;
+    final userId = _auth.currentUser?.uid;
     if (userId != null) {
       await _dio.delete('auth/account');
-      await _supabase.auth.signOut();
+      await _auth.signOut();
       await _clearSessionData();
     }
   }
 
   /// Get current user ID
-  String? get currentUserId => _supabase.auth.currentUser?.id;
+  String? get currentUserId => _auth.currentUser?.uid;
 
   /// Check if user is signed in
-  bool get isSignedIn => _supabase.auth.currentUser != null;
+  bool get isSignedIn => _auth.currentUser != null;
 }
