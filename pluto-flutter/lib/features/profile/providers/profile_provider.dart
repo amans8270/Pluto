@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dio/dio.dart';
 import '../../../core/network/dio_client.dart';
 
 final myProfileProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
@@ -6,7 +7,12 @@ final myProfileProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
   try {
     final resp = await dio.get('users/me');
     return resp.data as Map<String, dynamic>;
-  } catch (_) { return null; }
+  } on DioException catch (e) {
+    if (e.response?.statusCode == 404) {
+      return null;
+    }
+    rethrow;
+  }
 });
 
 final availableInterestsProvider = FutureProvider<List<dynamic>>((ref) async {

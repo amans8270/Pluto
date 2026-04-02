@@ -24,6 +24,8 @@ class SendMessageNotifier extends Notifier<void> {
     await dio.post('chats/$chatId/messages', data: {
       'content': content, 'msg_type': 'TEXT',
     });
+    ref.invalidate(messagesProvider(chatId));
+    ref.invalidate(chatListProvider);
   }
 }
 

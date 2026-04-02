@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/providers/auth_provider.dart';
 import '../providers/workflow_provider.dart';
 
 class TripApplicantsScreen extends ConsumerWidget {
@@ -91,11 +90,8 @@ class _ApplicantTile extends ConsumerWidget {
     }
     
     if (status == 'GROUP_PENDING') {
-      final authState = ref.watch(authStateProvider);
-      final currentUserId = authState.value?.uid;
-      final voteStatus = ref.watch(applicationStatusProvider(appId)).valueOrNull;
-      final voters = voteStatus?['voters'] as List?;
-      final alreadyVoted = voters != null && voters.contains(currentUserId);
+      final alreadyVotedAsync = ref.watch(hasCurrentUserVotedProvider(appId));
+      final alreadyVoted = alreadyVotedAsync.valueOrNull ?? false;
 
       return ElevatedButton(
         style: ElevatedButton.styleFrom(

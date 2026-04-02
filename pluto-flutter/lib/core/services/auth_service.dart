@@ -1,41 +1,56 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:dio/dio.dart';
+
+import '../network/dio_client.dart';
 import 'cache_service.dart';
 import 'secure_storage_service.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService(
-    FirebaseAuth.instance,
+    Supabase.instance.client,
+    ref.watch(dioProvider),
     ref.watch(cacheServiceProvider),
     ref.watch(secureStorageServiceProvider),
   );
 });
 
 class AuthService {
-  final FirebaseAuth _auth;
+  final SupabaseClient _supabase;
+  final Dio _dio;
   final CacheService _cache;
   final SecureStorageService _secureStorage;
 
-  AuthService(this._auth, this._cache, this._secureStorage);
+  AuthService(this._supabase, this._dio, this._cache, this._secureStorage);
 
-  Future<void> signOut() async {
-    // 1. Clear Firebase Auth
-    await _auth.signOut();
-    
-    // 2. Clear Local Cache (General preferences, API responses)
+  Future<void> _clearSessionData() async {
+    final hasSeenOnboarding = _cache.getBool('has_seen_onboarding') ?? false;
     await _cache.clear();
-    
-    // 3. Clear Secure Storage (Tokens, sensitive data)
+    if (hasSeenOnboarding) {
+      await _cache.setBool('has_seen_onboarding', true);
+    }
     await _secureStorage.deleteAll();
   }
 
-  // Add more auth methods here if needed (e.g. deleteAccount)
+  /// Sign out and clear all local data
+  Future<void> signOut() async {
+    await _supabase.auth.signOut();
+    await _clearSessionData();
+  }
+
+  /// Delete account
   Future<void> deleteAccount() async {
-    final user = _auth.currentUser;
-    if (user != null) {
-      await user.delete();
-      await _cache.clear();
-      await _secureStorage.deleteAll();
+    final userId = _supabase.auth.currentUser?.id;
+    if (userId != null) {
+      await _dio.delete('auth/account');
+      await _supabase.auth.signOut();
+      await _clearSessionData();
     }
   }
+
+  /// Get current user ID
+  String? get currentUserId => _supabase.auth.currentUser?.id;
+
+  /// Check if user is signed in
+  bool get isSignedIn => _supabase.auth.currentUser != null;
 }

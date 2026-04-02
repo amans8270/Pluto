@@ -4,25 +4,55 @@ class AppConfig {
   // ── Dev / staging / prod switch via --dart-define ─────────────────────────
   static const String env = String.fromEnvironment('ENV', defaultValue: 'dev');
 
+  // ── Supabase Configuration ────────────────────────────────────────────────
+  // SECURITY: NEVER hardcode real keys. Always use --dart-define at build time.
+  // Example: flutter build apk --dart-define=SUPABASE_URL=https://xxx.supabase.co
+  static const String supabaseUrl = String.fromEnvironment(
+    'SUPABASE_URL',
+  );
+
+  static const String supabaseAnonKey = String.fromEnvironment(
+    'SUPABASE_ANON_KEY',
+  );
+
+  // ── API Configuration ────────────────────────────────────────────────────
   static String get apiBaseUrl {
     switch (env) {
-      case 'prod': return 'https://pluto-backend-568055543790.us-east4.run.app/api/v1/';
-      case 'staging': return 'https://api-staging.pluto.app/api/v1/';
-      default: return 'http://192.168.29.126:8080/api/v1/';
+      case 'prod':
+        return 'https://pluto.fastapicloud.dev/api/v1/';
+      case 'staging':
+        return 'https://pluto.fastapicloud.dev/api/v1/';
+      default:
+        return 'http://10.0.2.2:8080/api/v1/'; // Android emulator localhost
     }
   }
 
   static String get wsBaseUrl {
     switch (env) {
-      case 'prod': return 'wss://pluto-backend-568055543790.us-east4.run.app/ws/';
-      case 'staging': return 'wss://api-staging.pluto.app/ws/';
-      default: return 'ws://192.168.29.126:8080/ws/';
+      case 'prod':
+        return 'wss://pluto.fastapicloud.dev/ws';
+      case 'staging':
+        return 'wss://pluto.fastapicloud.dev/ws';
+      default:
+        return 'ws://10.0.2.2:8080/ws'; // Android emulator localhost
     }
   }
 
-  // Google Maps API key (set via --dart-define or secrets)
-  static const String googleMapsApiKey = String.fromEnvironment('GOOGLE_MAPS_KEY', defaultValue: '');
+  // Google Maps API key (set via --dart-define)
+  static const String googleMapsApiKey =
+      String.fromEnvironment('GOOGLE_MAPS_KEY');
 
-  // Razorpay key
-  static const String razorpayKey = String.fromEnvironment('RAZORPAY_KEY', defaultValue: '');
+  // Razorpay key (set via --dart-define)
+  static const String razorpayKey =
+      String.fromEnvironment('RAZORPAY_KEY');
+
+  // ── Validation ───────────────────────────────────────────────────────────
+  static void validateConfig() {
+    if (supabaseUrl.isEmpty) {
+      throw Exception('SUPABASE_URL must be set via --dart-define');
+    }
+    if (supabaseAnonKey.isEmpty) {
+      throw Exception('SUPABASE_ANON_KEY must be set via --dart-define');
+    }
+  }
 }

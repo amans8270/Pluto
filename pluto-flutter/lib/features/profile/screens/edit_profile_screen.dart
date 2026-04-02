@@ -9,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/network/dio_client.dart';
+import '../../../core/services/cache_service.dart';
 import '../providers/profile_provider.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -43,6 +44,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   void _initializeData() {
     final profile = ref.read(myProfileProvider).valueOrNull;
+    final cachedInterestIds =
+        ref.read(cacheServiceProvider).getString('pending_interest_ids');
+
+    if (cachedInterestIds != null && cachedInterestIds.isNotEmpty) {
+      for (final raw in cachedInterestIds.split(',')) {
+        final id = int.tryParse(raw);
+        if (id != null) {
+          _selectedInterests.add(id);
+        }
+      }
+    }
+
     if (profile == null) return;
 
     setState(() {
@@ -55,10 +68,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       final gender = profile['gender']?.toString().toUpperCase();
       if (gender == 'MALE') {
         _gender = 'M';
-      } else if (gender == 'FEMALE')
+      } else if (gender == 'FEMALE') {
         _gender = 'F';
-      else
+      } else {
         _gender = 'O';
+      }
 
       // Photos
       final photos = profile['photos'] as List?;
@@ -152,20 +166,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         await dio.post('users/me/profile', data: payload);
       }
 
-      // Refresh profile state so router lets us into /discover
-      ref.invalidate(myProfileProvider);
-      await ref.read(myProfileProvider.future);
+      await ref.read(cacheServiceProvider).remove('pending_interest_ids');
 
+      // Invalidate cache so provider re-fetches in background.
+      // Navigate immediately — don't block on the re-fetch.
+      ref.invalidate(myProfileProvider);
       if (mounted) context.go('/discover');
     } on DioException catch (e) {
       final msg = e.response?.data['detail'] ?? e.message;
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Error: $msg')));
+      }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -459,14 +476,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           onSelected: (selected) {
                             setState(() {
                               if (selected) {
-                                if (_selectedInterests.length < 10)
+                                if (_selectedInterests.length < 10) {
                                   _selectedInterests.add(id);
+                                }
                               } else {
                                 _selectedInterests.remove(id);
                               }
                             });
                           },
-                          selectedColor: PlutoColors.dating.withOpacity(0.2),
+                          selectedColor: PlutoColors.dating.withValues(alpha: 0.2),
                           checkmarkColor: PlutoColors.dating,
                           labelStyle: TextStyle(
                             color: isSelected

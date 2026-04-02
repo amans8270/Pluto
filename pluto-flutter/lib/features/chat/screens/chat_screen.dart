@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../profile/providers/profile_provider.dart';
 import '../providers/chat_provider.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -20,6 +21,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final msgs = ref.watch(messagesProvider(widget.chatId));
+    final currentUserId = ref.watch(myProfileProvider).valueOrNull?['id']?.toString();
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -47,7 +49,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 itemCount: messages.length,
-                itemBuilder: (ctx, i) => _MessageBubble(msg: messages[i]),
+                itemBuilder: (ctx, i) => _MessageBubble(
+                  msg: messages[i],
+                  currentUserId: currentUserId,
+                ),
               ),
             ),
           ),
@@ -60,7 +65,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               color: Theme.of(context).cardColor,
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, -3))
               ],
@@ -78,7 +83,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color:
-                          colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                          colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: TextField(
@@ -128,12 +133,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
 class _MessageBubble extends StatelessWidget {
   final Map<String, dynamic> msg;
-  const _MessageBubble({required this.msg});
+  final String? currentUserId;
+  const _MessageBubble({required this.msg, required this.currentUserId});
 
   @override
   Widget build(BuildContext context) {
-    // For now all messages show as sender (replace with actual user check)
-    const isMe = true;
+    final isMe =
+        currentUserId != null && msg['sender_id']?.toString() == currentUserId;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
